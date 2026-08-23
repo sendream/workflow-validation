@@ -1,0 +1,51 @@
+# Codex workflow context hygiene
+# Keep generated evidence, cold archives, and derived graph data out of default search.
+
+.agent-state/**
+.agents/tasks/**
+.agents/runs/**
+.agents/state/**
+**/graphify-out/**
+**/.codegraph/**
+**/codegraph-out/**
+
+# Sensitive local material should only be inspected by explicit path.
+*.pem
+*.key
+*.p12
+*.pfx
+*.token
+*.secret
+pem/**
+secrets.*
+secret.*
+credentials.*
+credential.*
+**/secrets/**
+**/credentials/**
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.template
+!**/*.env.example
+!**/*.env.template
+
+# Runtime data and large generated artifacts.
+**/deploy/data/redis/**
+**/deploy/data/weaviate/**
+**/deploy/data/postgres/**
+**/deploy/data/mysql/**
+**/deploy/data/milvus/**
+**/deploy/data/elasticsearch/**
+**/node_modules/**
+**/dist/**
+**/target/**
+**/build/**
+**/coverage/**
+**/playwright-report/**
+**/test-results/**
+**/.playwright-mcp/**
+**/*.har
+**/*.trace
+**/trace.zip
+**/*.webm

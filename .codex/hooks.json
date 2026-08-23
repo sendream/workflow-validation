@@ -1,0 +1,76 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CODEX_WORKFLOW_HOOK_PRESET=full sh \"$(git rev-parse --show-toplevel)/.agents/scripts/hook-dispatch.sh\" session-start",
+            "statusMessage": "Loading planning context"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CODEX_WORKFLOW_HOOK_PRESET=full sh \"$(git rev-parse --show-toplevel)/.agents/scripts/hook-dispatch.sh\" user-prompt"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CODEX_WORKFLOW_HOOK_PRESET=full sh \"$(git rev-parse --show-toplevel)/.agents/scripts/hook-dispatch.sh\" pre-bash"
+          }
+        ]
+      },
+      {
+        "matcher": "apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CODEX_WORKFLOW_HOOK_PRESET=full sh \"$(git rev-parse --show-toplevel)/.agents/scripts/hook-dispatch.sh\" pre-edit"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CODEX_WORKFLOW_HOOK_PRESET=full sh \"$(git rev-parse --show-toplevel)/.agents/scripts/hook-dispatch.sh\" post-bash"
+          }
+        ]
+      },
+      {
+        "matcher": "apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CODEX_WORKFLOW_HOOK_PRESET=full sh \"$(git rev-parse --show-toplevel)/.agents/scripts/hook-dispatch.sh\" post-edit"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CODEX_WORKFLOW_HOOK_PRESET=full sh \"$(git rev-parse --show-toplevel)/.agents/scripts/hook-dispatch.sh\" stop"
+          }
+        ]
+      }
+    ]
+  }
+}
