@@ -507,6 +507,7 @@ class Leaf(Base):
             self._prefix, (self.lineno, self.column) = context
         self.type = type
         self.value = value
+        self.bracket_depth = 0
         if prefix is not None:
             self._prefix = prefix
         self.fixers_applied: list[Any] | None = fixers_applied[:]

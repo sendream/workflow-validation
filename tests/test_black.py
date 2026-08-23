@@ -875,6 +875,32 @@ class BlackTestCase(BlackBaseTestCase):
         black.lib2to3_parse(py3_only)
         black.lib2to3_parse(py3_only, {TargetVersion.PY36})
 
+    def test_lib2to3_parse_initializes_bracket_depth(self) -> None:
+        source = """\
+import tempfile
+from builtins import dict as ExtractorLoggingConfig
+
+package_name_raw = "logging-strict"
+is_test_file_1 = True
+with tempfile.TemporaryDirectory() as fp:
+    path_alternative_dest_folder_1 = fp
+    reg = ExtractorLoggingConfig(  # type: ignore[arg-type]  # pyright: ignore[something]  # fmt: skip
+        package_name_raw,
+        path_alternative_dest_folder=path_alternative_dest_folder_1,  # type: ignore[arg-type]
+        is_test_file=is_test_file_1,
+    )
+"""
+
+        root = black.lib2to3_parse(source)
+
+        self.assertTrue(
+            all(isinstance(leaf.bracket_depth, int) for leaf in root.leaves())
+        )
+        black.format_str(
+            source,
+            mode=black.Mode(target_versions={TargetVersion.PY310}),
+        )
+
     def test_get_features_used_decorator(self) -> None:
         # Test the feature detection of new decorator syntax
         # since this makes some test cases of test_get_features_used()
