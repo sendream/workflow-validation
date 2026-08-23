@@ -1,0 +1,23 @@
+T1 #5214 bare-control statistics
+baseline=8947c48ef2077c3a301b03c1e814dc2e3f78436e
+branch=trial/control-t1-5214
+head=3b6961072bda97854da05b4a4a1e5e9a3f7b8c3e
+commit_subject=Initialize bracket depth for all leaves
+files_changed=2
+insertions=25
+deletions=0
+codex_turns=2
+codex_wall_seconds=415.87
+input_tokens=2071721
+cached_input_tokens=1972736
+noncached_input_tokens=98985
+output_tokens=16302
+reasoning_output_tokens=7456
+mechanical_delegations=0
+three_file_consumption=none
+overlay_guard_monitor=not-installed
+focused_tests=2 passed
+full_tests=482 passed, 3 skipped
+independent_full_test_seconds=5.80
+worktree_clean=yes
+pushed=no

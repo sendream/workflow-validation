@@ -1,0 +1,36 @@
+diff --git a/src/blib2to3/pytree.py b/src/blib2to3/pytree.py
+index 234e8fd..a2f8d87 100644
+--- a/src/blib2to3/pytree.py
++++ b/src/blib2to3/pytree.py
+@@ -513,0 +514 @@ def __init__(
++        self.bracket_depth = 0
+diff --git a/tests/test_black.py b/tests/test_black.py
+index c33715c..5d5e452 100644
+--- a/tests/test_black.py
++++ b/tests/test_black.py
+@@ -40,0 +41 @@
++from black.nodes import STANDALONE_COMMENT
+@@ -873,0 +875,23 @@ def test_lib2to3_parse(self) -> None:
++    def test_fmt_skip_leaf_has_bracket_depth(self) -> None:
++        source = """\
++import tempfile
++
++package_name_raw = "logging-strict"
++is_test_file_1 = True
++with tempfile.TemporaryDirectory() as fp:
++    path_alternative_dest_folder_1 = fp
++    reg = dict(  # type: ignore[arg-type]  # pyright: ignore[something]  # fmt: skip
++        package_name_raw,
++        path_alternative_dest_folder=path_alternative_dest_folder_1,  # type: ignore[arg-type]
++        is_test_file=is_test_file_1,
++    )
++"""
++        root = black.lib2to3_parse(source)
++        black.normalize_fmt_off(root, Mode(), ())
++
++        fmt_skip_leaves = [
++            leaf for leaf in root.leaves() if leaf.type == STANDALONE_COMMENT
++        ]
++        self.assertEqual(len(fmt_skip_leaves), 1)
++        self.assertEqual(fmt_skip_leaves[0].bracket_depth, 0)
++
