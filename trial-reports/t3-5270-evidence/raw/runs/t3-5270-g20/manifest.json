@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-g20",
+  "created_at": "2026-08-23T07:55:52Z",
+  "started_at": "2026-08-23T07:55:52Z",
+  "completed_at": "2026-08-23T07:55:52Z",
+  "duration_ms": 31,
+  "tool_runtime_ms": 31,
+  "command": "/home/lsy/trials/black-run-1/venv/bin/python .agents/scripts/validate-workflow-overlay-boundary.py --root . --staged-only --require-local-exclude --format json",
+  "command_argv": [
+    "/home/lsy/trials/black-run-1/venv/bin/python",
+    ".agents/scripts/validate-workflow-overlay-boundary.py",
+    "--root",
+    ".",
+    "--staged-only",
+    "--require-local-exclude",
+    "--format",
+    "json"
+  ],
+  "exit_code": 1,
+  "status": "fail",
+  "summary": "Staged workflow overlay boundary check before product-only commit",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "{\n  \"errors\": [\n    \"local workflow overlay ignore patterns are incomplete\"\n  ],\n  \"local_exclude\": {\n    \"covered\": {\n      \"**/.codegraph/\": false,\n      \"**/codegraph-out/\": false,\n      \"/.agent-state/\": false,\n      \"/.agents/\": false,\n      \"/.aiderignore\": false,\n      \"/.codegraph/\": false,\n      \"/.codex/\": false,\n      \"/.geminiignore\": false,\n      \"/.graphifyignore\": false,\n      \"/.repomixignore\": false,\n      \"/.rgignore\": false,\n      \"/AGENTS.md\": false,\n      \"/code_review.md\": false,\n      \"/codegraph-out/\": false,\n      \"/findings.md\": false,\n      \"/progress.md\": false,\n      \"/task_plan.md\": false\n    },\n    \"missing\": [\n      \"/AGENTS.md\",\n      \"/code_review.md\",\n      \"/task_plan.md\",\n      \"/progress.md\",\n      \"/findings.md\",\n      \"/.agents/\",\n      \"/.agent-state/\",\n      \"/.rgignore\",\n      \"/.geminiignore\",\n      \"/.repomixignore\",\n      \"/.aiderignore\",\n      \"/.graphifyignore\",\n      \"/.codegraph/\",\n      \"**/.codegraph/\",\n      \"/codegraph-out/\",\n      \"**/codegraph-out/\",\n      \"/.codex/\"\n    ],\n    \"sources\": {\n      \"git_info_exclude\": [],\n      \"gitignore\": [\n        \".venv\",\n        \".coverage\",\n        \".coverage.*\",\n        \"_build\",\n...[truncated]",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "6ac569b2c5143b5d890971a7944b7bf779ef3df23182f4fdb249b504f60b0688",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R6"
+  ],
+  "linked_scenario_ids": [
+    "S5"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}

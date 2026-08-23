@@ -1,0 +1,32 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_long_flat_subscript_chain_split_work_is_linear ______________
+
+    def test_long_flat_subscript_chain_split_work_is_linear() -> None:
+        small_source = "x = a" + "".join(f"[{i}]" for i in range(40)) + "\n"
+        large_source, expected = read_data("cases", "long_flat_subscript_chain")
+    
+        with patch.object(
+            black.linegen,
+            "_first_right_hand_split",
+            wraps=black.linegen._first_right_hand_split,
+        ) as small_split:
+            black.format_str(small_source, mode=black.Mode())
+    
+        with patch.object(
+            black.linegen,
+            "_first_right_hand_split",
+            wraps=black.linegen._first_right_hand_split,
+        ) as large_split:
+            actual = black.format_str(large_source, mode=black.Mode())
+    
+        assert actual == expected
+>       assert large_split.call_count <= small_split.call_count * 4
+E       AssertionError: assert 1700 <= (68 * 4)
+E        +  where 1700 = <MagicMock name='_first_right_hand_split' id='127126194084352'>.call_count
+E        +  and   68 = <MagicMock name='_first_right_hand_split' id='127126193674272'>.call_count
+
+tests/test_format.py:106: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_format.py::test_long_flat_subscript_chain_split_work_is_linear
+1 failed in 0.53s

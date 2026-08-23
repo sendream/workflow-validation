@@ -1,0 +1,81 @@
+{
+  "role": "qa",
+  "verdict": "blocking",
+  "summary": "The candidate materially violates the exact-byte compatibility boundary. A read-only same-revision differential probe forced the new batch helper to reject, thereby exercising the unchanged legacy RHS loop shown in diff.patch, and found 43 mismatches across 162 deterministic cases. A default-Mode annotated assignment with 60 simple NAME subscripts is 598 bytes on the candidate batch path versus 592 bytes on the legacy path and contains an additional split. Residual split work was not falsified: real _first_right_hand_split counts were 44 at both n=160 and n=300. The 169-line specialized path therefore has a demonstrated correctness and maintenance risk, while the new unit bound and fixture comparator also leave evidence gaps.",
+  "falsification_attempts": [
+    {
+      "hypothesis": "An accepted flat single-leaf subscript shape can be partitioned differently by the batch helper than by repeated legacy RHS splitting.",
+      "probe": "On locked candidate d522defdf8a6ea6858aa0b95b34b31a3865a55c6, compare black.format_str output normally and with _batch_split_flat_subscript_chain patched to raise CannotSplit, which returns control to the otherwise unchanged legacy loop shown in diff.patch. Exercise 162 deterministic cases over line lengths 1, 20, 40, 79, 80, 81, 88, and 100; NUMBER, NAME, STRING, wide STRING, and mixed-width bodies; and top-level, annotated, chained, and indented assignments.",
+      "evidence": "Packet file diff.patch and replayable QA probe P1: 137/162 cases entered the batch path and 43 outputs differed. For source `result: list[int] = a` plus 60 `[key{i % 7}]` trailers under black.Mode(), candidate SHA-256 e41c1477d78da065df50ebdc875022e99d53c4d27b2d2b45f6947433feab61b3 was 598 bytes, while forced legacy SHA-256 11684693c5a8821d8dc9c50275fa0a78045526d2d1be888cf07eeaee16f2bb32 was 592 bytes; the unified diff showed an additional split at the second `key4` boundary.",
+      "outcome": "not-applicable"
+    },
+    {
+      "hypothesis": "The candidate retains quadratic residual RHS split work beyond the benchmark's n=160 point.",
+      "probe": "Patch _first_right_hand_split with wraps and format the packet generator at n=160 and n=300 using black.Mode(), recording real call counts.",
+      "evidence": "C4 and replayable QA probe P2: n=160 made 44 _first_right_hand_split calls and n=300 also made 44 calls (input-size ratio 1.875, call-count ratio 1.0). C4 timing medians were 0.028177370 seconds and 0.045968159 seconds respectively.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The batch generator can partially yield and then raise CannotSplit, causing the legacy fallback to run after partial output or mutation.",
+      "probe": "Inspect control flow and mutation order in the added helper and its _rhs caller.",
+      "evidence": "Packet file diff.patch: every explicit CannotSplit guard precedes result construction; all produced Lines are accumulated in `result`; `ensure_visible` is reached only after the last explicit CannotSplit; and `yield from result` occurs only after the complete batch has been built.",
+      "outcome": "excluded"
+    },
+    {
+      "hypothesis": "The performance evidence uses a different generator/API, cache-sensitive execution, missing warm-up, or an invalid median calculation.",
+      "probe": "Audit the exact capture implementation invoked by C1 and C4 and cross-check its reported raw samples and medians against evidence-ledger.md.",
+      "evidence": "C1, C4, evidence-ledger.md, and replayable artifact .agent-state/runs/t3-5270/scripts/evidence_capture.py: generated_source matches the declared expression; capture calls black.format_str(source, mode=black.Mode()); black.format_str has no file cache; each size has one immediate unmeasured warm-up and three perf_counter samples; statistics.median is used; and the ledger reproduces all three samples and medians for both phases.",
+      "outcome": "excluded"
+    },
+    {
+      "hypothesis": "The n40/n80 deterministic regression can pass even if the measured split work grows quadratically.",
+      "probe": "Evaluate the asserted call-count bound in the added test against a doubled input with quadratic work.",
+      "evidence": "Packet file diff.patch: the only growth assertion is `large_split.call_count <= small_split.call_count * 4`. Doubling n from 40 to 80 gives exactly 4x growth for an n-squared process, so the test named `split_work_is_linear` admits quadratic growth.",
+      "outcome": "not-applicable"
+    },
+    {
+      "hypothesis": "The claimed comparison of every pre-existing fixture-loader output can silently omit entries due to non-unique comparison keys.",
+      "probe": "Compare the captured fixture entry counts with the dictionary sizes used by compare_candidate.",
+      "evidence": "C1 reports 972 baseline fixture entries, while C4 reports only 968 baseline comparison keys; C4 reports 976 captured candidate entries but only 972 candidate comparison keys. The capture script constructs maps with `{entry['key']: entry}`, which silently overwrites duplicates instead of asserting key uniqueness.",
+      "outcome": "not-applicable"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "QA-T3-5270-001",
+      "severity": "S1",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R3",
+      "linked_scenario_id": "S2",
+      "linked_slice_id": "src/black/linegen.py::_batch_split_flat_subscript_chain",
+      "case_class": "compatibility",
+      "claim": "The specialized batch path changes formatting bytes for accepted simple subscript chains, including a default-line-length annotated assignment containing only NAME bodies.",
+      "evidence": "diff.patch explicitly accepts NAME, NUMBER, and STRING bodies and direct assignment RHS shapes. In replayable QA probe P1, 43/162 candidate outputs differed from the forced legacy path. The default-Mode annotated NAME example produced candidate hash e41c1477d78da065df50ebdc875022e99d53c4d27b2d2b45f6947433feab61b3 (598 bytes) versus legacy hash 11684693c5a8821d8dc9c50275fa0a78045526d2d1be888cf07eeaee16f2bb32 (592 bytes), with an extra body split. Because diff.patch shows that raising CannotSplit from the helper enters the unchanged pre-candidate RHS loop, this is a direct candidate/base-path differential. C4's four generated comparisons use only numeric top-level chains and therefore do not cover this accepted shape.",
+      "recommended_disposition": "accepted"
+    },
+    {
+      "finding_id": "QA-T3-5270-002",
+      "severity": "S2",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R1",
+      "linked_scenario_id": "S1",
+      "linked_slice_id": "tests/test_format.py::test_long_flat_subscript_chain_split_work_is_linear",
+      "case_class": "property",
+      "claim": "The regression test's 4x bound for a 2x input increase does not establish linear or non-quadratic split work.",
+      "evidence": "diff.patch asserts only `large_split.call_count <= small_split.call_count * 4` for n=40 versus n=80. A quadratic implementation has exactly that growth and passes at equality. The current candidate happens to show stronger independent counts (44 at both n=160 and n=300), but the committed test would not prevent a future quadratic regression.",
+      "recommended_disposition": "accepted"
+    },
+    {
+      "finding_id": "QA-T3-5270-003",
+      "severity": "S2",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R4",
+      "linked_scenario_id": "S3",
+      "linked_slice_id": ".agent-state/runs/t3-5270/scripts/evidence_capture.py::compare_candidate",
+      "case_class": "compatibility",
+      "claim": "The fixture identity comparator silently collapses four captured entries, so its evidence does not prove identity for every pre-existing loader output.",
+      "evidence": "C1 captured 972 baseline fixture entries but C4 compared 968 baseline keys; C4 captured 976 candidate entries but compared 972 candidate keys. The capture implementation builds dictionaries keyed only by `entry['key']`, overwriting duplicates without a uniqueness assertion.",
+      "recommended_disposition": "accepted"
+    }
+  ]
+}

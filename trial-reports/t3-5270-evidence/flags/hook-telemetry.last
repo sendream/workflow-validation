@@ -1,0 +1,1 @@
+{"timestamp":"2026-08-23T08:07:15Z","event":"stop","preset":"full","event_budget_ms":"3000","state_bytes_read":"44445","scan_scope":"workflow-fingerprint","lock_outcome":"acquired","command_duration_ms":"88","result_class":"clean-noop"}

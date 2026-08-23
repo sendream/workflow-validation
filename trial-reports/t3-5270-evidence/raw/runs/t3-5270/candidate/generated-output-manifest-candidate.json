@@ -1,0 +1,40 @@
+{
+  "captured_at": "2026-08-23T09:20:07Z",
+  "generator": "\"x = a\" + \"\".join(f\"[{i}]\" for i in range(n)) + \"\\n\"",
+  "outputs": {
+    "160": {
+      "n": 160,
+      "output_byte_count": 1392,
+      "output_path": ".agent-state/runs/t3-5270/candidate/generated-output/n-160.py",
+      "output_sha256": "7aaa276868af3d8cacdef1bdc7f644393a3c1d178be9cf14cc594b391386fe67",
+      "source_byte_count": 696,
+      "source_sha256": "3712f141baa01d081a521cf95659fc5db5078aade74b733e99057de2710d5b62"
+    },
+    "300": {
+      "n": 300,
+      "output_byte_count": 2932,
+      "output_path": ".agent-state/runs/t3-5270/candidate/generated-output/n-300.py",
+      "output_sha256": "67c93915d1bb35080fc3f5bd661fbf3e3238c460a1b243be5f998fd677c29ead",
+      "source_byte_count": 1396,
+      "source_sha256": "06157b3e1ca540e452f4803b4685c572db9623ae0bbc9de8593dab790a5afd9b"
+    },
+    "40": {
+      "n": 40,
+      "output_byte_count": 162,
+      "output_path": ".agent-state/runs/t3-5270/candidate/generated-output/n-40.py",
+      "output_sha256": "3a3293946c645f35eba0cb3bf9374a69e2e5a588b1063f2b11e1b76535fc8c3d",
+      "source_byte_count": 156,
+      "source_sha256": "70bb8f068d193d98b881893f542487fad84a5872934b444c321c709d2871df99"
+    },
+    "80": {
+      "n": 80,
+      "output_byte_count": 532,
+      "output_path": ".agent-state/runs/t3-5270/candidate/generated-output/n-80.py",
+      "output_sha256": "45df3ca6cd9c4b90cba58f9566b21e82484214244d6911cabc6630a03db49fdc",
+      "source_byte_count": 316,
+      "source_sha256": "6bc580d3b5fbb65d7f0b10a940203b3f97bb1a95b91552e6b1eb476ae5858342"
+    }
+  },
+  "phase": "candidate",
+  "schema_version": 1
+}

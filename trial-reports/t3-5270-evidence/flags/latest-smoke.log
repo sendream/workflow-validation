@@ -1,0 +1,17 @@
+pass: file exists: AGENTS.md
+pass: file exists: .codex/hooks.json
+pass: file exists: .agents/scripts/verify-workflow-smoke.sh
+pass: file exists: .agents/scripts/sensitive-command-guard.py
+pass: file exists: .agents/scripts/sensitive_guard_policy.py
+pass: file exists: .agents/scripts/verify-hooks-runtime.sh
+pass: base workflow smoke marker is current
+pass: .codex/hooks.json is valid JSON
+pass: sensitive command guard and policy syntax
+pass: verify-hooks-runtime.sh syntax
+pass: hook-dispatch.sh syntax
+pass: check-workflow-dirty.sh syntax
+pass: workflow dirty checker detects workflow asset changes
+pass: planning-hook.py syntax
+pass: planning hook treats raw template/review-only records as inactive
+
+Fast smoke passed

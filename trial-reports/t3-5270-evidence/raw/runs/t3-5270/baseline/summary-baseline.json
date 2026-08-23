@@ -1,0 +1,15 @@
+{
+  "benchmark": ".agent-state/runs/t3-5270/baseline/benchmark-baseline.json",
+  "boundary_manifest": ".agent-state/runs/t3-5270/baseline/boundary-manifest-baseline.json",
+  "environment": ".agent-state/runs/t3-5270/baseline/environment-baseline.json",
+  "fixture_entries": 972,
+  "fixture_manifest": ".agent-state/runs/t3-5270/baseline/fixture-manifest-baseline.json",
+  "generated_manifest": ".agent-state/runs/t3-5270/baseline/generated-output-manifest-baseline.json",
+  "medians_seconds": {
+    "160": 2.370730568014551,
+    "300": 8.8111884049722,
+    "40": 0.014369467971846461,
+    "80": 0.40060720400651917
+  },
+  "phase": "baseline"
+}

@@ -1,0 +1,1 @@
+{"batch_accepted_case_count": 337, "case_count": 400, "mismatch_count": 0, "mismatches": [], "pass": true, "schema_version": 1, "seed": 5270}

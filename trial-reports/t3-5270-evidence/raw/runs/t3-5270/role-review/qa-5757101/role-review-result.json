@@ -1,0 +1,75 @@
+{
+  "role": "qa",
+  "verdict": "blocking",
+  "summary": "The replacement closes the prior annotated equal-width NAME counterexample, strengthens the committed work bounds, preserves duplicate fixture invocations in C5, and shows constant real RHS split counts of 90 at n=80, n=160, and n=300. It is nevertheless blocking because the monotonic-width guard still accepts shapes whose batch partitions differ from the unchanged legacy RHS path. A default-Mode chain of 30 nondecreasing-width CJK STRING bodies enters the batch helper twice and formats to 527 bytes instead of the legacy path's 509 bytes. A broader read-only differential found 89 mismatches among 669 batch-accepted cases. The committed differential tests do not cover increasing-width STRING sequences, so exact-byte compatibility remains falsified.",
+  "falsification_attempts": [
+    {
+      "hypothesis": "The replacement still reproduces the prior annotated-assignment drift for 60 equal-width NAME trailers.",
+      "probe": "Format the prior exact source `result: list[int] = a` plus 60 `[key{i % 7}]` trailers under black.Mode(), then force _batch_split_flat_subscript_chain to raise CannotSplit and compare with the unchanged legacy RHS path.",
+      "evidence": "C4, diff.patch, and replayable QA probe P1: replacement and forced-legacy outputs were identical with SHA-256 11684693c5a8821d8dc9c50275fa0a78045526d2d1be888cf07eeaee16f2bb32.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "Moving batch_start one trailer right and rejecting decreasing trailer widths preserves bytes for every accepted monotonic NAME, NUMBER, and STRING sequence.",
+      "probe": "Differentially format candidate versus forced legacy for monotonic equal, gradually increasing, and large-jump NAME/NUMBER/STRING bodies across top-level, annotated, chained, indented, subscript-LHS, tuple-LHS, and long-LHS assignments at 18 boundary-focused line lengths. Track whether the batch helper actually accepts each case.",
+      "evidence": "diff.patch and replayable QA probe P2: 669 of 1,008 cases entered the batch helper, with 89 candidate/legacy byte mismatches. At default black.Mode(), source SHA-256 abdbc21a121050dae7d8c1e55418293dcfb2beb5480d3289f4b1c3f7ee91c060 (`result = base` plus five repetitions at each successive body width of one through six CJK characters) entered the batch helper twice. Candidate output SHA-256 464f8d5fe3800b6c1baf34a5ed5c0a5266c1155070449da4ece5961e1c314acd was 527 bytes; forced legacy SHA-256 2cbedf18f345f6f7808421990222741cbc8a3c77016ed92a40cf73260bba1a9b was 509 bytes. The unified diff showed four additional individually split STRING bodies.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The replacement retains quadratic residual _first_right_hand_split growth on the required long numeric generator.",
+      "probe": "Wrap the real _first_right_hand_split and format the declared numeric generator independently at n=80, n=160, and n=300 with black.Mode(). Also scan n=80/n=160 counts at every line length from 1 through 140.",
+      "evidence": "C5, evidence-ledger.md, and replayable QA probe P3: required default-mode counts were 90, 90, and 90. Across line lengths 1 through 140, the largest n=160 count was 2,572 at line length 1 versus 1,292 at n=80, approximately the 2x input ratio rather than quadratic 4x growth.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The strengthened committed work test still uses the prior quadratic-permitting 4x doubling assertion.",
+      "probe": "Inspect the exact test change and compare its bounds with C2's base failure and current real call counts.",
+      "evidence": "Packet file diff.patch and C2: tests/test_format.py now independently caps n=80 at 160 calls and n=160 at 320 calls; replayable QA probe P3 observed 90 calls at each size. The prior `large <= small * 4` assertion is absent.",
+      "outcome": "excluded"
+    },
+    {
+      "hypothesis": "C5 still collapses the four duplicate fixture-loader keys and can omit a baseline invocation from identity comparison.",
+      "probe": "Cross-check raw entry counts, unique-key counts, duplicate counts, and unmatched baseline entry counts in the refreshed C5 summary.",
+      "evidence": "C5 and evidence-ledger.md: C5 reports 972 raw baseline entries, 968 unique keys, four duplicate baseline entries retained, 976 candidate entries, four candidate duplicates, and unmatched_baseline_fixture_entry_count=0.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The batch generator can partially yield and then raise CannotSplit, causing a mutated legacy fallback.",
+      "probe": "Inspect exception, mutation, result accumulation, and yield order in the replacement helper and _rhs caller.",
+      "evidence": "Packet file diff.patch: all explicit CannotSplit checks occur before result construction and ensure_visible mutation; produced Lines are accumulated in result; yield from result occurs only after the full batch is constructed.",
+      "outcome": "excluded"
+    },
+    {
+      "hypothesis": "The refreshed benchmark evidence uses an inconsistent generator/API or shows quadratic n=160-to-n=300 timing growth.",
+      "probe": "Cross-check C5's raw samples and comparison summary with the exact protocol declared in evidence-ledger.md.",
+      "evidence": "C5 and evidence-ledger.md: the generator and black.format_str(source, mode=black.Mode()) API are unchanged; each size has one immediate warm-up and three measured perf_counter samples; n=160 median is 0.035733390 seconds, n=300 median is 0.061139664 seconds, and the reported exponent is 0.854387332.",
+      "outcome": "not-reproduced"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "QA-T3-5270-004",
+      "severity": "S1",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R3",
+      "linked_scenario_id": "S2",
+      "linked_slice_id": "src/black/linegen.py::_batch_split_flat_subscript_chain",
+      "case_class": "compatibility",
+      "claim": "The replacement's monotonic-width guard still admits simple STRING chains whose optimized partitions change exact formatting bytes relative to legacy RHS splitting.",
+      "evidence": "diff.patch accepts STRING bodies and permits nondecreasing trailer widths. Replayable QA probe P2 used a default-Mode top-level assignment with 30 STRING bodies: five each containing one through six CJK characters, so trailer display widths are monotonic. The helper was accepted twice. Candidate output was 527 bytes with SHA-256 464f8d5fe3800b6c1baf34a5ed5c0a5266c1155070449da4ece5961e1c314acd; forcing CannotSplit into the unchanged legacy loop produced 509 bytes with SHA-256 2cbedf18f345f6f7808421990222741cbc8a3c77016ed92a40cf73260bba1a9b. The candidate introduced four additional body splits. The broader boundary/context matrix found 89 mismatches among 669 accepted cases.",
+      "recommended_disposition": "accepted"
+    },
+    {
+      "finding_id": "QA-T3-5270-005",
+      "severity": "S2",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R3",
+      "linked_scenario_id": "S2",
+      "linked_slice_id": "tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split",
+      "case_class": "compatibility",
+      "claim": "The committed legacy differential does not exercise nondecreasing unequal-width STRING trailers, allowing the remaining accepted-shape byte drift to pass.",
+      "evidence": "diff.patch parameterizes two equal-width NAME cases and one nonmonotonic NUMBER case that is rejected to fallback. It has no STRING case and no accepted gradually increasing-width sequence. C6 reports zero mismatches for its 162 cases, but replayable QA probe P2 independently finds default-mode increasing-width STRING drift and 89 total mismatches outside that matrix.",
+      "recommended_disposition": "accepted"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-optional-paren-red",
+  "created_at": "2026-08-23T09:16:19Z",
+  "started_at": "2026-08-23T09:16:16Z",
+  "completed_at": "2026-08-23T09:16:19Z",
+  "duration_ms": 2054,
+  "tool_runtime_ms": 2054,
+  "command": "/home/lsy/trials/black-run-1/venv/bin/python -m pytest tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split -q",
+  "command_argv": [
+    "/home/lsy/trials/black-run-1/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split",
+    "-q"
+  ],
+  "exit_code": 1,
+  "status": "fail",
+  "summary": "Default-line-length optional RHS parenthesis boundary RED",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "....F..                                                                  [100%]\n=================================== FAILURES ===================================\n_ test_long_flat_subscript_chain_matches_legacy_split[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx = -names-False] _\n\nassignment = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx = '\nbody_pattern = 'names', batch_expected = False\n\n    @pytest.mark.parametrize(\n        (\"assignment\", \"body_pattern\", \"batch_expected\"),\n        [\n            (\"result = \", \"names\", True),\n            (\"result: list[int] = \", \"names\", True),\n            (\"result = \", \"increasing-numbers\", True),\n            (\"result = \", \"nonmonotonic-numbers\", False),\n            (\"x\" * 84 + \" = \", \"names\", False),\n            (\"result = \", \"increasing-wide-names\", False),\n            (\"result = \", \"increasing-wide-strings\", False),\n        ],\n    )\n    def test_long_flat_subscript_chain_matches_legacy_split(\n        assignment: str, body_pattern: str, batch_expected: bool\n    ) -> None:\n        if body_pattern == \"names\":\n            bodies = [f\"key{index % 7}\" for index in range(60)\n...[truncated]",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "5d606a3c2da97d32f5ac5d2c28848abf98889c1aabd50454227028c3e7b6f8a7",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R3"
+  ],
+  "linked_scenario_ids": [
+    "S2"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}

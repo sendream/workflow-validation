@@ -1,0 +1,71 @@
+....F                                                                    [100%]
+=================================== FAILURES ===================================
+_ test_long_flat_subscript_chain_matches_legacy_split[result = -increasing-wide-strings-False] _
+
+assignment = 'result = ', body_pattern = 'increasing-wide-strings'
+batch_expected = False
+
+    @pytest.mark.parametrize(
+        ("assignment", "body_pattern", "batch_expected"),
+        [
+            ("result = ", "names", True),
+            ("result: list[int] = ", "names", True),
+            ("result = ", "increasing-numbers", True),
+            ("result = ", "nonmonotonic-numbers", False),
+            ("result = ", "increasing-wide-strings", False),
+        ],
+    )
+    def test_long_flat_subscript_chain_matches_legacy_split(
+        assignment: str, body_pattern: str, batch_expected: bool
+    ) -> None:
+        if body_pattern == "names":
+            bodies = [f"key{index % 7}" for index in range(60)]
+        elif body_pattern == "increasing-numbers":
+            bodies = [str(10 ** (index // 10) + index) for index in range(60)]
+        elif body_pattern == "nonmonotonic-numbers":
+            bodies = [
+                str(10**15 + index) if index % 3 == 0 else str(index) for index in range(60)
+            ]
+        else:
+            bodies = [repr("字" * (index // 5 + 1)) for index in range(30)]
+        source = assignment + "a" + "".join(f"[{body}]" for body in bodies) + "\n"
+    
+        original = black.linegen._batch_split_flat_subscript_chain
+        batch_accepted = False
+    
+        def tracked_batch(*args: Any, **kwargs: Any) -> Iterator[black.lines.Line]:
+            nonlocal batch_accepted
+            lines = list(original(*args, **kwargs))
+            batch_accepted = True
+            yield from lines
+    
+        with patch.object(
+            black.linegen,
+            "_batch_split_flat_subscript_chain",
+            side_effect=tracked_batch,
+        ):
+            actual = black.format_str(source, mode=black.Mode())
+    
+        with patch.object(
+            black.linegen,
+            "_batch_split_flat_subscript_chain",
+            side_effect=black.linegen.CannotSplit("force legacy RHS splitting"),
+        ):
+            legacy = black.format_str(source, mode=black.Mode())
+    
+>       assert actual == legacy
+E       assert 'result = a["..."字字字字字字"\n]\n' == 'result = a["..."字字字字字字"\n]\n'
+E         
+E         Skipping 135 identical leading characters in diff, use -v to show
+E            "字字字字"
+E         - ]["字字字字"]["字字字字字"]["字字字字字"][
+E         + ][
+E         +     "字字字字"
+E         + ][...
+E         
+E         ...Full output truncated (20 lines hidden), use '-vv' to show
+
+tests/test_format.py:162: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split[result = -increasing-wide-strings-False]
+1 failed, 4 passed in 1.10s

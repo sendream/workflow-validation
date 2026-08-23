@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-diff-check-v3",
+  "created_at": "2026-08-23T08:57:56Z",
+  "started_at": "2026-08-23T08:57:55Z",
+  "completed_at": "2026-08-23T08:57:56Z",
+  "duration_ms": 4,
+  "tool_runtime_ms": 4,
+  "command": "git diff --check 868d4efdbcaf4c29387a99ba854be406b1a1ec99",
+  "command_argv": [
+    "git",
+    "diff",
+    "--check",
+    "868d4efdbcaf4c29387a99ba854be406b1a1ec99"
+  ],
+  "exit_code": 0,
+  "status": "pass",
+  "summary": "Final base-to-candidate diff check after reviewer correction",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "empty",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R6"
+  ],
+  "linked_scenario_ids": [
+    "S5"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}

@@ -1,0 +1,81 @@
+{
+  "role": "qa",
+  "verdict": "blocking",
+  "summary": "Exact candidate 483b25d3c73ad38148343f4417e21262425162d5 closes the prior default-mode annotated ASCII NAME, increasing-width CJK STRING, and increasing-width CJK NAME counterexamples. STRING and non-ASCII NAME bodies do not enter the fast path. Residual work and timing remain non-quadratic, and C10 reports duplicate-safe corpus identity. The candidate is nevertheless blocking because accepted ASCII NAME and NUMBER chains still change formatting bytes at supported custom line lengths. At line_length=10, a top-level chain of 30 equal-width `[k]` trailers enters the batch helper four times and produces 284 bytes instead of the legacy path's 518 bytes, dropping the legacy optional RHS parentheses. The same drift occurs for `[0]` trailers, and an indented NAME chain drifts at line_length=17. The committed legacy differential always uses default Mode(), so it does not cover this boundary class.",
+  "falsification_attempts": [
+    {
+      "hypothesis": "One or more previously reported default-mode counterexamples still reaches the fast path or changes bytes.",
+      "probe": "Re-run the exact annotated 60-trailer ASCII NAME source, the 30-trailer increasing-width CJK STRING source, and the analogous CJK NAME source; track successful batch invocations and compare candidate output with a forced CannotSplit legacy run.",
+      "evidence": "C13, diff.patch, and replayable QA probe P1: annotated ASCII NAME output matched legacy at SHA-256 11684693c5a8821d8dc9c50275fa0a78045526d2d1be888cf07eeaee16f2bb32 with two batch invocations. CJK STRING output matched legacy at SHA-256 2cbedf18f345f6f7808421990222741cbc8a3c77016ed92a40cf73260bba1a9b with zero batch invocations. CJK NAME output matched legacy at SHA-256 5c066e5d8c14daa7a09b87b1aeaea7539f6fd805059937afdfa2dfeef2f88031 with zero batch invocations.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "Every accepted monotonic ASCII NAME/NUMBER shape remains byte-identical to forced legacy splitting across line-length and indentation boundaries.",
+      "probe": "Format top-level and indented chains of 30 equal-width ASCII NAME or NUMBER trailers with custom line lengths, track fast-path acceptance, and compare against the unchanged legacy loop by forcing the helper to raise CannotSplit.",
+      "evidence": "diff.patch and replayable QA probe P2: at black.Mode(line_length=10), source SHA-256 61bcc863cb73b86130165320fe10d374781780930b16b0a3ba7fdfb5175445f0 (`result = base` plus 30 `[k]` trailers) entered the batch path four times. Candidate SHA-256 add2578319a68a9263cd022194980479cb1f0ac44349862a4080d6ada5ee259e was 284 bytes; forced legacy SHA-256 b3e902fb19a65860fdf3687f2b350044e171d2c75abc720f6631540b43cdba10 was 518 bytes. The unified diff begins with legacy `result = (` versus candidate `result = base[`, proving optional-parenthesis drift. Thirty `[0]` trailers at line_length=10 also entered four times and differed: candidate SHA-256 e0a681e14d503f2eaa8fe849b10e2ae25744eab85d4e7d27afe09a82d27cf71d versus legacy ad65b9f3b9842536fd885cc7bf601b75290a5c0567be93ffbf8559bb0f39e61f. An indented `[k]` chain at line_length=17 likewise differed, 537 bytes versus 727.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The ASCII-only spelling guard can still admit STRING or non-ASCII NAME bodies indirectly.",
+      "probe": "Inspect the accepted leaf predicate and execute the prior CJK STRING and CJK identifier sources while tracking only successful helper iterations.",
+      "evidence": "Packet file diff.patch requires body.type in {token.NAME, token.NUMBER} and body.value.isascii(). Replayable QA probe P1 observed zero successful batch invocations for both CJK STRING and CJK NAME chains, with candidate output identical to forced legacy.",
+      "outcome": "excluded"
+    },
+    {
+      "hypothesis": "The replacement retains quadratic residual _first_right_hand_split growth for the required numeric generator.",
+      "probe": "Wrap the real _first_right_hand_split and independently format the declared generator at n=80, n=160, and n=300 with black.Mode().",
+      "evidence": "C10, evidence-ledger.md, and replayable QA probe P3: real call counts were 90 at n=80, 90 at n=160, and 90 at n=300, within the committed bounds of 160 and 320 for the tested n=80 and n=160 cases.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "C10 still collapses the four duplicate fixture-loader keys or leaves a baseline invocation unmatched.",
+      "probe": "Cross-check C10 raw entry counts, unique-key counts, duplicate counts, and unmatched baseline entries.",
+      "evidence": "C10 and evidence-ledger.md report 972 raw baseline entries, 968 unique keys, four retained baseline duplicates, 976 candidate entries, four candidate duplicates, and unmatched_baseline_fixture_entry_count=0.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The strengthened work test still relies on the prior quadratic-permitting 4x doubling assertion.",
+      "probe": "Inspect tests/test_format.py in diff.patch and compare its explicit limits with fresh real call counts.",
+      "evidence": "Packet file diff.patch independently caps n=80 at 160 calls and n=160 at 320 calls; replayable QA probe P3 recorded 90 calls at both sizes. The prior relative 4x assertion is absent.",
+      "outcome": "excluded"
+    },
+    {
+      "hypothesis": "The refreshed performance evidence uses a different generator/API or exhibits quadratic n=160-to-n=300 timing growth.",
+      "probe": "Cross-check the stated benchmark protocol, raw samples, medians, and growth calculation in C10 and evidence-ledger.md.",
+      "evidence": "C10 and evidence-ledger.md use `x = a` plus numeric trailers, black.format_str(source, mode=black.Mode()), one immediate warm-up, three perf_counter samples, and medians. Candidate n=160 median was 0.041413740 seconds, n=300 median was 0.060106199 seconds, speedup at n=160 was 57.25x, and the reported growth exponent was 0.592579.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The batch generator can partially yield and then raise CannotSplit, causing a mutated legacy fallback.",
+      "probe": "Inspect exception, mutation, result accumulation, and yield order in the exact helper and _rhs caller.",
+      "evidence": "Packet file diff.patch places all explicit CannotSplit checks before result construction and ensure_visible mutation, accumulates every produced Line in result, and executes yield from result only after the complete batch is constructed.",
+      "outcome": "excluded"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "QA-T3-5270-006",
+      "severity": "S1",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R3",
+      "linked_scenario_id": "S2",
+      "linked_slice_id": "src/black/linegen.py::_batch_split_flat_subscript_chain",
+      "case_class": "compatibility",
+      "claim": "The ASCII NAME/NUMBER fast path changes exact formatting bytes at custom line-length boundaries by omitting legacy optional RHS parentheses.",
+      "evidence": "Replayable QA probe P2 used black.Mode(line_length=10) with source `result = base` plus 30 `[k]` trailers. The helper accepted four times. Candidate output was 284 bytes with SHA-256 add2578319a68a9263cd022194980479cb1f0ac44349862a4080d6ada5ee259e; forced legacy output was 518 bytes with SHA-256 b3e902fb19a65860fdf3687f2b350044e171d2c75abc720f6631540b43cdba10. The unified diff shows legacy wrapping the RHS as `result = (` while the batch result begins `result = base[`. Repeating `[0]` produced the same class of drift, and an indented ASCII NAME chain drifted at line_length=17. These shapes satisfy the exact guard in diff.patch.",
+      "recommended_disposition": "accepted"
+    },
+    {
+      "finding_id": "QA-T3-5270-007",
+      "severity": "S2",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R3",
+      "linked_scenario_id": "S2",
+      "linked_slice_id": "tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split",
+      "case_class": "compatibility",
+      "claim": "The committed optimized-versus-legacy regression only uses default line length and therefore misses accepted ASCII boundary drift.",
+      "evidence": "diff.patch constructs every differential with black.Mode() and does not parameterize line_length. C11 reports zero mismatches for 290 cases, but replayable QA probe P2 finds direct accepted-path mismatches at line lengths 10 and 17 for both NAME and NUMBER bodies.",
+      "recommended_disposition": "accepted"
+    }
+  ]
+}

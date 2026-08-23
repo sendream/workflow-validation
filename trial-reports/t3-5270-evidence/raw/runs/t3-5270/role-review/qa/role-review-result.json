@@ -1,0 +1,87 @@
+{
+  "role": "qa",
+  "verdict": "blocking",
+  "summary": "Exact candidate 1ff34455be35812ab10cebd66e6730f68eab1196 closes the annotated ASCII NAME, CJK STRING, CJK subscript-NAME, and prior indented line-length=17 cases; it retains 90/90/90 real split counts and the submitted non-quadratic timing/corpus evidence. It remains blocking. The exact prior top-level `result = base` plus 30 `[k]` trailers at line_length=10 still enters the batch helper four times and produces 284 bytes instead of the forced legacy path's 518 bytes. The new equality guard does not fire because the scan/focused test fixes a different RHS base width. A separate 2,520-case mutation of non-ASCII RHS bases, LHS names, and annotations found 53 mismatches among 490 accepted cases, including a default-88 annotated assignment with only ASCII `[k]` bodies. C11's 3,920 cases therefore do not exhaust the accepted syntax domain.",
+  "falsification_attempts": [
+    {
+      "hypothesis": "The previously reported annotated ASCII NAME, CJK STRING, CJK subscript-NAME, and indented line-length=17 counterexamples remain open.",
+      "probe": "Re-run each exact source, track successful batch invocations, and compare normal candidate output with a forced CannotSplit legacy run.",
+      "evidence": "C13, diff.patch, and replayable QA probe P1: annotated ASCII NAME matched legacy at SHA-256 11684693c5a8821d8dc9c50275fa0a78045526d2d1be888cf07eeaee16f2bb32; CJK STRING and CJK subscript-NAME matched legacy with zero batch invocations at SHA-256 2cbedf18f345f6f7808421990222741cbc8a3c77016ed92a40cf73260bba1a9b and 5c066e5d8c14daa7a09b87b1aeaea7539f6fd805059937afdfa2dfeef2f88031; the indented line-length=17 source matched legacy at SHA-256 4744a66b5ee18f7e8c9cb9f5ea3bcdccd3118ce846e154688e9895d61bbe0ccf with zero batch invocations.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The new exact-prefix fail-open closes the exact prior top-level ASCII NAME drift at line_length=10.",
+      "probe": "Re-run source `result = base` plus 30 `[k]` trailers with black.Mode(line_length=10), track batch acceptance, and compare to the unchanged legacy loop by forcing the helper to raise CannotSplit.",
+      "evidence": "diff.patch and replayable QA probe P2: source SHA-256 61bcc863cb73b86130165320fe10d374781780930b16b0a3ba7fdfb5175445f0 still entered the helper four times. Candidate SHA-256 add2578319a68a9263cd022194980479cb1f0ac44349862a4080d6ada5ee259e was 284 bytes; forced legacy SHA-256 b3e902fb19a65860fdf3687f2b350044e171d2c75abc720f6631540b43cdba10 was 518 bytes. The legacy output retains optional RHS parentheses while the candidate does not.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "C11's line-length scan exhausts surrounding-context and RHS-base variations relevant to the equality guard.",
+      "probe": "Mutate the fixed context families with CJK RHS bases, CJK LHS names, and CJK annotation names of six different lengths, scanning every line length 1 through 140 with 30 equal-width ASCII `[k]` trailers; force legacy only for accepted cases.",
+      "evidence": "C11 and replayable QA probe P3: 490 of 2,520 mutated cases entered the batch helper and 53 differed from forced legacy. At default Mode(), source SHA-256 66b6945979d7b1cae23ed86ba044e9ce821116315aaebe23bd81c50c0cb1f185 (`result:` plus 44 CJK identifier characters in the annotation, `= base`, and 30 `[k]` trailers) entered four times. Candidate SHA-256 eb36041552ef6504af1237c1437cf88abb5d630142ddb69a565fff3bc00422e2 was 268 bytes; legacy SHA-256 2e26f9fc8cb6ccb65b61b109a4d74ef4b9c59c73ae8fd211a9788e03c57c8249 was 262 bytes, with the candidate adding one extra body split.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The replacement retains quadratic residual _first_right_hand_split growth for the required numeric generator.",
+      "probe": "Wrap the real _first_right_hand_split and independently format the declared generator at n=80, n=160, and n=300 with black.Mode().",
+      "evidence": "C10, evidence-ledger.md, and replayable QA probe P1: real call counts were 90 at n=80, 90 at n=160, and 90 at n=300, within the committed n=80 and n=160 bounds.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "C10 collapses duplicate fixture-loader entries or leaves a baseline invocation unmatched.",
+      "probe": "Cross-check C10 raw entry counts, unique-key counts, retained duplicate counts, and unmatched baseline count.",
+      "evidence": "C10 and evidence-ledger.md report 972 raw baseline entries, 968 unique keys, four retained baseline duplicates, 976 candidate entries, four candidate duplicates, and unmatched_baseline_fixture_entry_count=0.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The refreshed performance evidence uses a different generator/API or exhibits quadratic n=160-to-n=300 timing growth.",
+      "probe": "Cross-check C10's protocol, samples, medians, speedup, and growth calculation against evidence-ledger.md.",
+      "evidence": "C10 and evidence-ledger.md use the declared numeric generator, black.format_str(source, mode=black.Mode()), one immediate warm-up, three perf_counter samples, and medians. Candidate n=160 median was 0.039052603 seconds, n=300 median was 0.065071453 seconds, n=160 speedup was 60.71x, and the reported exponent was 0.812233.",
+      "outcome": "not-reproduced"
+    },
+    {
+      "hypothesis": "The batch generator can partially yield and then raise CannotSplit, causing a mutated legacy fallback.",
+      "probe": "Inspect exception, mutation, accumulation, and yield order in the exact helper and _rhs caller.",
+      "evidence": "Packet file diff.patch places all explicit CannotSplit checks before result construction and ensure_visible mutation, accumulates every produced Line in result, and yields only after the full batch is constructed.",
+      "outcome": "excluded"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "QA-T3-5270-008",
+      "severity": "S1",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R3",
+      "linked_scenario_id": "S2",
+      "linked_slice_id": "src/black/linegen.py::_batch_split_flat_subscript_chain",
+      "case_class": "compatibility",
+      "claim": "The exact prior ASCII NAME line-length=10 drift remains open because the equality-only base-prefix guard is sensitive to RHS base spelling.",
+      "evidence": "At black.Mode(line_length=10), exact prior source SHA-256 61bcc863cb73b86130165320fe10d374781780930b16b0a3ba7fdfb5175445f0 (`result = base` plus 30 `[k]` trailers) entered the helper four times. Candidate output was 284 bytes, SHA-256 add2578319a68a9263cd022194980479cb1f0ac44349862a4080d6ada5ee259e; forced legacy output was 518 bytes, SHA-256 b3e902fb19a65860fdf3687f2b350044e171d2c75abc720f6631540b43cdba10. The legacy optional RHS parentheses are absent from the candidate output. C11's top/equal-name family reports line length 10 as unaccepted, proving that its fixed source does not reproduce this `base` spelling.",
+      "recommended_disposition": "accepted"
+    },
+    {
+      "finding_id": "QA-T3-5270-009",
+      "severity": "S1",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R3",
+      "linked_scenario_id": "S2",
+      "linked_slice_id": "src/black/linegen.py::_batch_split_flat_subscript_chain",
+      "case_class": "compatibility",
+      "claim": "Non-ASCII surrounding names still enter the fast path with ASCII trailer bodies and cause default-line-length formatting drift.",
+      "evidence": "The guard in diff.patch applies isascii() only to each subscript body, not the RHS base, assignment target, or annotation. Replayable QA probe P3 found 53 mismatches among 490 accepted context mutations. At default line length, source SHA-256 66b6945979d7b1cae23ed86ba044e9ce821116315aaebe23bd81c50c0cb1f185, containing a 44-character CJK annotation and 30 ASCII `[k]` trailers, entered four times and produced candidate SHA-256 eb36041552ef6504af1237c1437cf88abb5d630142ddb69a565fff3bc00422e2 (268 bytes) versus legacy SHA-256 2e26f9fc8cb6ccb65b61b109a4d74ef4b9c59c73ae8fd211a9788e03c57c8249 (262 bytes).",
+      "recommended_disposition": "accepted"
+    },
+    {
+      "finding_id": "QA-T3-5270-010",
+      "severity": "S2",
+      "evidence_level": "direct",
+      "linked_acceptance_id": "R5",
+      "linked_scenario_id": "S4",
+      "linked_slice_id": "C11 exhaustive line-length/context differential",
+      "case_class": "boundary",
+      "claim": "The 3,920-case scan is exhaustive only over fixed ASCII surrounding spellings and misses dimensions that control the equality guard and partition boundaries.",
+      "evidence": "C11 covers every line length 1 through 140 for 28 named context/body families and reports zero mismatches, yet exact-base replayable QA probe P2 reproduces the prior L10 drift and replayable QA probe P3 finds 53 mismatches after varying RHS base, LHS, and annotation spellings. The committed focused test in diff.patch likewise fixes the RHS base to `a`.",
+      "recommended_disposition": "accepted"
+    }
+  ]
+}

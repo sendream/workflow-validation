@@ -1,0 +1,83 @@
+{
+  "errors": [
+    "local workflow overlay ignore patterns are incomplete"
+  ],
+  "local_exclude": {
+    "covered": {
+      "**/.codegraph/": false,
+      "**/codegraph-out/": false,
+      "/.agent-state/": false,
+      "/.agents/": false,
+      "/.aiderignore": false,
+      "/.codegraph/": false,
+      "/.codex/": false,
+      "/.geminiignore": false,
+      "/.graphifyignore": false,
+      "/.repomixignore": false,
+      "/.rgignore": false,
+      "/AGENTS.md": false,
+      "/code_review.md": false,
+      "/codegraph-out/": false,
+      "/findings.md": false,
+      "/progress.md": false,
+      "/task_plan.md": false
+    },
+    "missing": [
+      "/AGENTS.md",
+      "/code_review.md",
+      "/task_plan.md",
+      "/progress.md",
+      "/findings.md",
+      "/.agents/",
+      "/.agent-state/",
+      "/.rgignore",
+      "/.geminiignore",
+      "/.repomixignore",
+      "/.aiderignore",
+      "/.graphifyignore",
+      "/.codegraph/",
+      "**/.codegraph/",
+      "/codegraph-out/",
+      "**/codegraph-out/",
+      "/.codex/"
+    ],
+    "sources": {
+      "git_info_exclude": [],
+      "gitignore": [
+        ".venv",
+        ".coverage",
+        ".coverage.*",
+        "_build",
+        ".DS_Store",
+        ".vscode",
+        ".python-version",
+        "docs/_static/pypi.svg",
+        ".tox",
+        "__pycache__",
+        "black.egg-info",
+        "black.dist-info",
+        "build/",
+        "dist/",
+        "pip-wheel-metadata/",
+        ".eggs",
+        "src/_black_version.py",
+        ".idea",
+        ".dmypy.json",
+        "*.swp",
+        ".hypothesis/",
+        "venv/",
+        ".ipynb_checkpoints/",
+        "node_modules/",
+        "*.pyd"
+      ]
+    },
+    "status": "warn"
+  },
+  "missing_required": [],
+  "root": "/home/lsy/trials/black-run-1/worktrees/t3-5270",
+  "staged_workflow_deletions": [],
+  "staged_workflow_entries": [],
+  "status": "fail",
+  "warnings": [],
+  "worktree_workflow_deletions": []
+}

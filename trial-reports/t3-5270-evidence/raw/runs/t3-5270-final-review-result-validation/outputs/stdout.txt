@@ -1,0 +1,15 @@
+{
+  "errors": [],
+  "require_result": true,
+  "required_files": [
+    "review-packet.md",
+    "diff.patch",
+    "changed-files.txt",
+    "evidence-ledger.md",
+    "waivers.md",
+    "dirty-worktree-summary.json"
+  ],
+  "status": "pass",
+  "strict_evidence": true,
+  "warnings": []
+}

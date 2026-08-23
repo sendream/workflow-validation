@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-candidate-final",
+  "created_at": "2026-08-23T07:45:13Z",
+  "started_at": "2026-08-23T07:44:55Z",
+  "completed_at": "2026-08-23T07:45:13Z",
+  "duration_ms": 17342,
+  "tool_runtime_ms": 17342,
+  "command": "/home/lsy/trials/black-run-1/venv/bin/python .agent-state/runs/t3-5270/scripts/evidence_capture.py --phase candidate",
+  "command_argv": [
+    "/home/lsy/trials/black-run-1/venv/bin/python",
+    ".agent-state/runs/t3-5270/scripts/evidence_capture.py",
+    "--phase",
+    "candidate"
+  ],
+  "exit_code": 0,
+  "status": "pass",
+  "summary": "Final pre-commit candidate performance and compatibility evidence after the complete production edit.",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "{\"benchmark\": \".agent-state/runs/t3-5270/candidate/benchmark-candidate.json\", \"boundary_manifest\": \".agent-state/runs/t3-5270/candidate/boundary-manifest-candidate.json\", \"comparison\": {\"added_fixture_keys\": [\"cases/long_flat_subscript_chain::declared\", \"cases/long_flat_subscript_chain::line-length-1-preview\", \"cases/long_flat_subscript_chain::line-length-1-stable\", \"cases/long_flat_subscript_chain::preview-alternate\"], \"baseline_fixture_entry_count\": 968, \"boundary_comparisons\": {\"attribute_call_chain\": {\"baseline_sha256\": \"cad0f75da4138e6b44658396ea3dc5265058ac297dd0de16dfc21f786a0c2c92\", \"candidate_sha256\": \"cad0f75da4138e6b44658396ea3dc5265058ac297dd0de16dfc21f786a0c2c92\", \"identical\": true}, \"mixed_subscript_call_trailer\": {\"baseline_sha256\": \"d16b6e0735c13453d0c87cba088912796ed5506d1625f0ec941d71cc3bf6380b\", \"candidate_sha256\": \"d16b6e0735c13453d0c87cba088912796ed5506d1625f0ec941d71cc3bf6380b\", \"identical\": true}}, \"boundary_identity\": true, \"candidate_fixture_entry_count\": 972, \"captured_at\": \"2026-08-23T07:45:13Z\", \"changed_fixture_keys\": [], \"fixture_identity_for_all_preexisting_entries\": true, \"generated_comparisons\": {\"160\": {\"baseline_byte_count\": 1392, \"baseline_sha256\n...[truncated]",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "181002e37b7881ab6c5873952396a6efc505478cc3597bee4faae12d0190681d",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5"
+  ],
+  "linked_scenario_ids": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}

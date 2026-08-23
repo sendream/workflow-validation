@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/lsy/trials/black-run-1/worktrees/t3-5270/.agent-state/runs/t3-5270/scripts/evidence_capture.py", line 21, in <module>
+    from tests.util import all_data_cases, read_data_with_mode
+ModuleNotFoundError: No module named 'tests'

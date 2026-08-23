@@ -1,0 +1,142 @@
+.....FF..                                                                [100%]
+=================================== FAILURES ===================================
+_ test_long_flat_subscript_chain_matches_legacy_split[result = -base-names-10-False] _
+
+assignment = 'result = ', base = 'base', body_pattern = 'names'
+line_length = 10, batch_expected = False
+
+    @pytest.mark.parametrize(
+        ("assignment", "base", "body_pattern", "line_length", "batch_expected"),
+        [
+            ("result = ", "a", "names", 88, True),
+            ("result: list[int] = ", "a", "names", 88, True),
+            ("result = ", "a", "increasing-numbers", 88, True),
+            ("result = ", "a", "nonmonotonic-numbers", 88, False),
+            ("x" * 84 + " = ", "a", "names", 88, False),
+            ("result = ", "base", "names", 10, False),
+            ("result: " + "名" * 44 + " = ", "base", "names", 88, False),
+            ("result = ", "a", "increasing-wide-names", 88, False),
+            ("result = ", "a", "increasing-wide-strings", 88, False),
+        ],
+    )
+    def test_long_flat_subscript_chain_matches_legacy_split(
+        assignment: str,
+        base: str,
+        body_pattern: str,
+        line_length: int,
+        batch_expected: bool,
+    ) -> None:
+        if body_pattern == "names":
+            bodies = [f"key{index % 7}" for index in range(60)]
+        elif body_pattern == "increasing-numbers":
+            bodies = [str(10 ** (index // 10) + index) for index in range(60)]
+        elif body_pattern == "nonmonotonic-numbers":
+            bodies = [
+                str(10**15 + index) if index % 3 == 0 else str(index) for index in range(60)
+            ]
+        elif body_pattern == "increasing-wide-names":
+            bodies = ["名" * (index // 5 + 1) for index in range(30)]
+        else:
+            bodies = [repr("字" * (index // 5 + 1)) for index in range(30)]
+        source = assignment + base + "".join(f"[{body}]" for body in bodies) + "\n"
+    
+        original = black.linegen._batch_split_flat_subscript_chain
+        batch_accepted = False
+    
+        def tracked_batch(*args: Any, **kwargs: Any) -> Iterator[black.lines.Line]:
+            nonlocal batch_accepted
+            lines = list(original(*args, **kwargs))
+            batch_accepted = True
+            yield from lines
+    
+        with patch.object(
+            black.linegen,
+            "_batch_split_flat_subscript_chain",
+            side_effect=tracked_batch,
+        ):
+            actual = black.format_str(source, mode=black.Mode(line_length=line_length))
+    
+        with patch.object(
+            black.linegen,
+            "_batch_split_flat_subscript_chain",
+            side_effect=black.linegen.CannotSplit("force legacy RHS splitting"),
+        ):
+            legacy = black.format_str(source, mode=black.Mode(line_length=line_length))
+    
+        assert actual == legacy
+>       assert batch_accepted is batch_expected
+E       assert True is False
+
+tests/test_format.py:173: AssertionError
+_ test_long_flat_subscript_chain_matches_legacy_split[result: \u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d = -base-names-88-False] _
+
+assignment = 'result: 名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名名 = '
+base = 'base', body_pattern = 'names', line_length = 88, batch_expected = False
+
+    @pytest.mark.parametrize(
+        ("assignment", "base", "body_pattern", "line_length", "batch_expected"),
+        [
+            ("result = ", "a", "names", 88, True),
+            ("result: list[int] = ", "a", "names", 88, True),
+            ("result = ", "a", "increasing-numbers", 88, True),
+            ("result = ", "a", "nonmonotonic-numbers", 88, False),
+            ("x" * 84 + " = ", "a", "names", 88, False),
+            ("result = ", "base", "names", 10, False),
+            ("result: " + "名" * 44 + " = ", "base", "names", 88, False),
+            ("result = ", "a", "increasing-wide-names", 88, False),
+            ("result = ", "a", "increasing-wide-strings", 88, False),
+        ],
+    )
+    def test_long_flat_subscript_chain_matches_legacy_split(
+        assignment: str,
+        base: str,
+        body_pattern: str,
+        line_length: int,
+        batch_expected: bool,
+    ) -> None:
+        if body_pattern == "names":
+            bodies = [f"key{index % 7}" for index in range(60)]
+        elif body_pattern == "increasing-numbers":
+            bodies = [str(10 ** (index // 10) + index) for index in range(60)]
+        elif body_pattern == "nonmonotonic-numbers":
+            bodies = [
+                str(10**15 + index) if index % 3 == 0 else str(index) for index in range(60)
+            ]
+        elif body_pattern == "increasing-wide-names":
+            bodies = ["名" * (index // 5 + 1) for index in range(30)]
+        else:
+            bodies = [repr("字" * (index // 5 + 1)) for index in range(30)]
+        source = assignment + base + "".join(f"[{body}]" for body in bodies) + "\n"
+    
+        original = black.linegen._batch_split_flat_subscript_chain
+        batch_accepted = False
+    
+        def tracked_batch(*args: Any, **kwargs: Any) -> Iterator[black.lines.Line]:
+            nonlocal batch_accepted
+            lines = list(original(*args, **kwargs))
+            batch_accepted = True
+            yield from lines
+    
+        with patch.object(
+            black.linegen,
+            "_batch_split_flat_subscript_chain",
+            side_effect=tracked_batch,
+        ):
+            actual = black.format_str(source, mode=black.Mode(line_length=line_length))
+    
+        with patch.object(
+            black.linegen,
+            "_batch_split_flat_subscript_chain",
+            side_effect=black.linegen.CannotSplit("force legacy RHS splitting"),
+        ):
+            legacy = black.format_str(source, mode=black.Mode(line_length=line_length))
+    
+        assert actual == legacy
+>       assert batch_accepted is batch_expected
+E       assert True is False
+
+tests/test_format.py:173: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split[result = -base-names-10-False]
+FAILED tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split[result: \u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d\u540d = -base-names-88-False]
+2 failed, 7 passed in 2.89s

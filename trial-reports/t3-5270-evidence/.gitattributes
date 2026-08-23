@@ -1,0 +1,3 @@
+# Preserve captured command output and reviewer patches byte-for-byte.
+# These files may intentionally contain diagnostic trailing whitespace.
+raw/** -whitespace

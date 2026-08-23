@@ -1,0 +1,40 @@
+{
+  "root": "/home/lsy/trials/black-run-1/worktrees/t3-5270",
+  "git_root": "/home/lsy/trials/black-run-1/worktrees/t3-5270",
+  "is_git_root": true,
+  "mode": "worktree",
+  "categories": {
+    "sensitive": [],
+    "generated": [],
+    "workflow-state": [],
+    "source-or-doc": [],
+    "large": []
+  },
+  "context_groups": {
+    "workflow": [],
+    "source": [],
+    "runtime-or-sensitive": [],
+    "generated-or-structural-index": [],
+    "generated-or-graphify": [],
+    "agent-state-or-archive": [],
+    "unknown": []
+  },
+  "summary": {
+    "sensitive": 0,
+    "generated": 0,
+    "workflow-state": 0,
+    "source-or-doc": 0,
+    "large": 0
+  },
+  "context_summary": {
+    "workflow": 0,
+    "source": 0,
+    "runtime-or-sensitive": 0,
+    "generated-or-structural-index": 0,
+    "generated-or-graphify": 0,
+    "agent-state-or-archive": 0,
+    "unknown": 0
+  },
+  "warnings": [],
+  "captured_for_revision": "483b25d3c73ad38148343f4417e21262425162d5"
+}

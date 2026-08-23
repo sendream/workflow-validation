@@ -1,0 +1,458 @@
+{
+  "checks": {
+    "active_lifecycle_closeout": {
+      "archive_status": "archive-deferred; retain root state and evidence for controller-owned review",
+      "archived_or_cleared": false,
+      "errors": [],
+      "lifecycle_state": "ready_to_submit",
+      "status": "pass",
+      "task_closeout_status": "checked"
+    },
+    "active_task_id": {
+      "errors": [],
+      "source": "current_task_snapshot",
+      "source_digests": {
+        "findings.md": "aec4c07f052d761ab57309550d347c5ca9ad00daecc3b56eab3bee1e7782e775",
+        "progress.md": "ccfbc2cdd63cdf71438aa670e5d25ec04ff4ce490c239dde9162a6db3ea1e86f",
+        "task_plan.md": "f364737df2bdd15a5289e79912748f0ebdd5ea23866424b71b3291ed671d1155"
+      },
+      "source_status": "complete",
+      "status": "pass",
+      "task_id": "t3-5270"
+    },
+    "browser_ui_evidence": {
+      "present": false,
+      "required": false,
+      "status": "pass"
+    },
+    "claim_evidence": {
+      "details": {
+        "checks": {
+          "command_pass_evidence_manifest": {
+            "checked_rows": 3,
+            "errors": [],
+            "status": "pass"
+          }
+        },
+        "errors": [],
+        "status": "pass",
+        "strict_required": false,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "current_task_snapshot": {
+      "impact_scope": "file-linked",
+      "lifecycle_state": "ready_to_submit",
+      "next_action": null,
+      "risk_tier": "high",
+      "source_digests": {
+        "findings.md": "aec4c07f052d761ab57309550d347c5ca9ad00daecc3b56eab3bee1e7782e775",
+        "progress.md": "ccfbc2cdd63cdf71438aa670e5d25ec04ff4ce490c239dde9162a6db3ea1e86f",
+        "task_plan.md": "f364737df2bdd15a5289e79912748f0ebdd5ea23866424b71b3291ed671d1155"
+      },
+      "source_status": "complete",
+      "task_id": "t3-5270"
+    },
+    "evidence_waivers": {
+      "details": {
+        "errors": [],
+        "ledger_rows": 7,
+        "repeated_waiver_signals": [],
+        "require_existing_artifacts": true,
+        "single_waiver_fallback_allowed": false,
+        "status": "pass",
+        "strict_trigger_required": true,
+        "tooling_gap_debt_rows": 0,
+        "waiver_rows": 0,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "external_content_boundary": {
+      "artifacts": [],
+      "status": "pass"
+    },
+    "fact_domain_execution": {
+      "duplicate_declarations": [],
+      "executed": [
+        "traceability",
+        "workflow_trace",
+        "evidence_waivers",
+        "review_authorization",
+        "reviewer_assessment",
+        "claim_evidence"
+      ],
+      "status": "pass",
+      "unique_command_count": 6
+    },
+    "final_ledger_closeout_status": {
+      "checked_rows": 7,
+      "errors": [],
+      "status": "pass"
+    },
+    "next_action_quality": {
+      "errors": [],
+      "status": "pass"
+    },
+    "referenced_dynamic_agent_campaigns": {
+      "paths": [],
+      "status": "pass"
+    },
+    "referenced_role_review_packets": {
+      "paths": [
+        ".agent-state/runs/t3-5270/role-review/qa"
+      ],
+      "status": "pass"
+    },
+    "referenced_run_manifests": {
+      "run_ids": [
+        "t3-5270",
+        "t3-5270-black-check",
+        "t3-5270-candidate-final",
+        "t3-5270-diff-check",
+        "t3-5270-full-suite-final",
+        "t3-5270-g20",
+        "t3-5270-green",
+        "t3-5270-red"
+      ],
+      "status": "pass"
+    },
+    "review_authorization": {
+      "details": {
+        "allowed_write_scope": "four product files plus required root task state and `.agent-state/runs/t3-5270/` evidence artifacts in the current checkout",
+        "authorization_source": "user task instruction and explicit “Approved. Proceed with exactly that guarded design.”",
+        "errors": [],
+        "finding_disposition_policy": "implementation-approved",
+        "implementation_evidence_detected": true,
+        "implementation_hits": [
+          "\\bpytest\\b",
+          "\\btests?\\b"
+        ],
+        "mode": "implementation-authorized",
+        "review_trigger_detected": true,
+        "review_trigger_hits": [
+          "\\breview\\b"
+        ],
+        "status": "pass",
+        "transition_decision": "implement-authorized",
+        "warnings": [],
+        "write_authorization": "task"
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "reviewer_assessment": {
+      "details": {
+        "adjudicative_agent_alias_claims": [],
+        "assessment_present": true,
+        "authorization_scope": "task",
+        "errors": [],
+        "external_system": false,
+        "high_or_release": true,
+        "lifecycle_state": "ready-to-submit",
+        "preferred_required": false,
+        "preferred_signals": [
+          "auth",
+          "permission",
+          "waiver"
+        ],
+        "release": false,
+        "required_assessment": "yes",
+        "role_review_count": 1,
+        "role_review_disposition_present": true,
+        "start_required": "no",
+        "start_result": "explicit-delegation-required",
+        "status": "pass",
+        "strict_trigger_required": true,
+        "submitted_packet_compaction": false,
+        "trigger_decision": "preferred",
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "role_review_packet:.agent-state/runs/t3-5270/role-review/qa": {
+      "details": {
+        "errors": [],
+        "require_result": false,
+        "required_files": [
+          "review-packet.md",
+          "diff.patch",
+          "changed-files.txt",
+          "evidence-ledger.md",
+          "waivers.md",
+          "dirty-worktree-summary.json"
+        ],
+        "status": "pass",
+        "strict_evidence": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "run_manifest:t3-5270": {
+      "details": {
+        "errors": [],
+        "require_existing_artifacts": true,
+        "run_count": 1,
+        "runs": [
+          {
+            "errors": [],
+            "manifest": ".agent-state/runs/t3-5270/manifest.json",
+            "run_id": "t3-5270",
+            "status": "pass",
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "strict": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "run_manifest:t3-5270-black-check": {
+      "details": {
+        "errors": [],
+        "require_existing_artifacts": true,
+        "run_count": 1,
+        "runs": [
+          {
+            "errors": [],
+            "manifest": ".agent-state/runs/t3-5270-black-check/manifest.json",
+            "run_id": "t3-5270-black-check",
+            "status": "pass",
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "strict": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "run_manifest:t3-5270-candidate-final": {
+      "details": {
+        "errors": [],
+        "require_existing_artifacts": true,
+        "run_count": 1,
+        "runs": [
+          {
+            "errors": [],
+            "manifest": ".agent-state/runs/t3-5270-candidate-final/manifest.json",
+            "run_id": "t3-5270-candidate-final",
+            "status": "pass",
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "strict": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "run_manifest:t3-5270-diff-check": {
+      "details": {
+        "errors": [],
+        "require_existing_artifacts": true,
+        "run_count": 1,
+        "runs": [
+          {
+            "errors": [],
+            "manifest": ".agent-state/runs/t3-5270-diff-check/manifest.json",
+            "run_id": "t3-5270-diff-check",
+            "status": "pass",
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "strict": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "run_manifest:t3-5270-full-suite-final": {
+      "details": {
+        "errors": [],
+        "require_existing_artifacts": true,
+        "run_count": 1,
+        "runs": [
+          {
+            "errors": [],
+            "manifest": ".agent-state/runs/t3-5270-full-suite-final/manifest.json",
+            "run_id": "t3-5270-full-suite-final",
+            "status": "pass",
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "strict": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "run_manifest:t3-5270-g20": {
+      "details": {
+        "errors": [],
+        "require_existing_artifacts": true,
+        "run_count": 1,
+        "runs": [
+          {
+            "errors": [],
+            "manifest": ".agent-state/runs/t3-5270-g20/manifest.json",
+            "run_id": "t3-5270-g20",
+            "status": "pass",
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "strict": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "run_manifest:t3-5270-green": {
+      "details": {
+        "errors": [],
+        "require_existing_artifacts": true,
+        "run_count": 1,
+        "runs": [
+          {
+            "errors": [],
+            "manifest": ".agent-state/runs/t3-5270-green/manifest.json",
+            "run_id": "t3-5270-green",
+            "status": "pass",
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "strict": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "run_manifest:t3-5270-red": {
+      "details": {
+        "errors": [],
+        "require_existing_artifacts": true,
+        "run_count": 1,
+        "runs": [
+          {
+            "errors": [],
+            "manifest": ".agent-state/runs/t3-5270-red/manifest.json",
+            "run_id": "t3-5270-red",
+            "status": "pass",
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "strict": true,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "source_roots_closeout": {
+      "checked_roots": [],
+      "errors": [],
+      "progress_rows": 0,
+      "registry_rows": 1,
+      "root_git": {
+        "dirty_count": 0,
+        "head": "d522defdf8a6ea6858aa0b95b34b31a3865a55c6",
+        "inside_work_tree": true,
+        "top_level": "/home/lsy/trials/black-run-1/worktrees/t3-5270"
+      },
+      "status": "pass",
+      "warnings": []
+    },
+    "traceability": {
+      "details": {
+        "case_classes": [
+          "boundary",
+          "compatibility",
+          "contract",
+          "negative",
+          "property"
+        ],
+        "errors": [],
+        "evidence_case_classes": [
+          "boundary",
+          "compatibility",
+          "contract",
+          "negative",
+          "property"
+        ],
+        "example_rows": 5,
+        "ledger_rows": 7,
+        "planned_case_classes": [
+          "boundary",
+          "compatibility",
+          "contract",
+          "negative",
+          "property"
+        ],
+        "reconciliation_rows": 0,
+        "scenario_rows": 6,
+        "status": "pass",
+        "strict_trigger_required": true,
+        "verification_rows": 8,
+        "warnings": []
+      },
+      "returncode": 0,
+      "status": "pass"
+    },
+    "typed_evidence_refs": {
+      "checked_rows": 0,
+      "errors": [],
+      "status": "pass"
+    },
+    "workflow_trace": {
+      "details": {
+        "errors": [],
+        "status": "pass",
+        "trace_artifact": null,
+        "trace_artifact_loaded": false,
+        "warnings": [],
+        "workflow_trace_rows": [
+          "code_review",
+          "graphify",
+          "implementation",
+          "isolated_reviewer",
+          "push_gate",
+          "read_before_decide",
+          "red_team",
+          "requirements-to-plan",
+          "risk_tier",
+          "sensitive_guard",
+          "ship-check",
+          "task_closeout",
+          "test_strategy",
+          "tooling-map",
+          "tooling-router",
+          "validation",
+          "verification_matrix"
+        ]
+      },
+      "returncode": 0,
+      "status": "pass"
+    }
+  },
+  "errors": [],
+  "external_scope": false,
+  "release_artifact_signal": false,
+  "require_existing_artifacts": true,
+  "risk_tier": "high",
+  "status": "pass",
+  "strict_required": true,
+  "warnings": []
+}

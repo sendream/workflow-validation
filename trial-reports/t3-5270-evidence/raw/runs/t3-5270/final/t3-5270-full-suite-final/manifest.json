@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-full-suite-final",
+  "created_at": "2026-08-23T07:45:36Z",
+  "started_at": "2026-08-23T07:45:29Z",
+  "completed_at": "2026-08-23T07:45:36Z",
+  "duration_ms": 6866,
+  "tool_runtime_ms": 6866,
+  "command": "/home/lsy/trials/black-run-1/venv/bin/python -m pytest -n auto",
+  "command_argv": [
+    "/home/lsy/trials/black-run-1/venv/bin/python",
+    "-m",
+    "pytest",
+    "-n",
+    "auto"
+  ],
+  "exit_code": 0,
+  "status": "pass",
+  "summary": "Fresh required full project suite after the final production edit.",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "============================= test session starts ==============================\nplatform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0\nrootdir: /home/lsy/trials/black-run-1/worktrees/t3-5270\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0\ncreated: 16/16 workers\n16 workers [485 items]\n\n........................................................................ [ 14%]\n........................................................................ [ 29%]\n........................................................................ [ 44%]\n........................................................................ [ 59%]\n........................................................................ [ 74%]\n...................................................ss................... [ 89%]\n.....................................................                    [100%]\n======================== 483 passed, 3 skipped in 6.72s ========================",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "df924ae191de6277ac5d0de5ca50ac793c0a666c4a12ed50e69caab42630d76d",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R4"
+  ],
+  "linked_scenario_ids": [
+    "S3"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}

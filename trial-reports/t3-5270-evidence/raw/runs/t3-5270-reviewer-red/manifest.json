@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-reviewer-red",
+  "created_at": "2026-08-23T08:17:52Z",
+  "started_at": "2026-08-23T08:17:47Z",
+  "completed_at": "2026-08-23T08:17:52Z",
+  "duration_ms": 761,
+  "tool_runtime_ms": 761,
+  "command": "/home/lsy/trials/black-run-1/venv/bin/python -m pytest tests/test_format.py::test_long_flat_subscript_chain_split_work_is_linear tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split -q",
+  "command_argv": [
+    "/home/lsy/trials/black-run-1/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_format.py::test_long_flat_subscript_chain_split_work_is_linear",
+    "tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split",
+    "-q"
+  ],
+  "exit_code": 1,
+  "status": "fail",
+  "summary": "Reviewer counterexample and strengthened work oracle RED on d522def",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "..F                                                                      [100%]\n=================================== FAILURES ===================================\n__ test_long_flat_subscript_chain_matches_legacy_split[result: list[int] = ] ___\n\nassignment = 'result: list[int] = '\n\n    @pytest.mark.parametrize(\"assignment\", [\"result = \", \"result: list[int] = \"])\n    def test_long_flat_subscript_chain_matches_legacy_split(\n        assignment: str,\n    ) -> None:\n        source = assignment + \"a\" + \"\".join(f\"[key{i % 7}]\" for i in range(60)) + \"\\n\"\n        actual = black.format_str(source, mode=black.Mode())\n    \n        with patch.object(\n            black.linegen,\n            \"_batch_split_flat_subscript_chain\",\n            side_effect=black.linegen.CannotSplit(\"force legacy RHS splitting\"),\n        ):\n            legacy = black.format_str(source, mode=black.Mode())\n    \n>       assert actual == legacy\nE       AssertionError: assert 'result: list...    key3\\n]\\n' == 'result: list...    key3\\n]\\n'\nE         \nE         Skipping 168 identical leading characters in diff, use -v to show\nE         - y2][key3][key4][\nE         ?           ------\nE         + y2][key3][\nE         +     key4\nE\n...[truncated]",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "9b3e66778576ac177efc96e81cd762188f8021bbabfaaf3191161f7acbe2db18",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R1",
+    "R3"
+  ],
+  "linked_scenario_ids": [
+    "S1",
+    "S4"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}

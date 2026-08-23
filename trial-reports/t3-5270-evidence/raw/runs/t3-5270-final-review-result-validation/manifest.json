@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-final-review-result-validation",
+  "created_at": "2026-08-23T09:58:48Z",
+  "started_at": "2026-08-23T09:58:48Z",
+  "completed_at": "2026-08-23T09:58:48Z",
+  "duration_ms": 50,
+  "tool_runtime_ms": 50,
+  "command": "/home/lsy/trials/black-run-1/venv/bin/python .agents/scripts/validate-role-review-packet.py --root . --packet .agent-state/runs/t3-5270/role-review/qa --risk-tier high --require-result --format json",
+  "command_argv": [
+    "/home/lsy/trials/black-run-1/venv/bin/python",
+    ".agents/scripts/validate-role-review-packet.py",
+    "--root",
+    ".",
+    "--packet",
+    ".agent-state/runs/t3-5270/role-review/qa",
+    "--risk-tier",
+    "high",
+    "--require-result",
+    "--format",
+    "json"
+  ],
+  "exit_code": 0,
+  "status": "pass",
+  "summary": "Strict validation of final blocking Role Reviewer result for candidate 1ff3445",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "{\n  \"errors\": [],\n  \"require_result\": true,\n  \"required_files\": [\n    \"review-packet.md\",\n    \"diff.patch\",\n    \"changed-files.txt\",\n    \"evidence-ledger.md\",\n    \"waivers.md\",\n    \"dirty-worktree-summary.json\"\n  ],\n  \"status\": \"pass\",\n  \"strict_evidence\": true,\n  \"warnings\": []\n}",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "7daf3de680ac37abd2b23068fbcf51dc40ddda15ab2815efda34aee136b0b4fe",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R7"
+  ],
+  "linked_scenario_ids": [
+    "S6"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}

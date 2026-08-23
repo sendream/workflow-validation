@@ -1,0 +1,21 @@
+{
+  "command": "/home/lsy/trials/black-run-1/venv/bin/python .agents/scripts/validate-role-review-packet.py --root . --packet .agent-state/runs/t3-5270/role-review/qa --risk-tier high --format json",
+  "validated_at": "2026-08-23T08:39:34Z",
+  "exit_code": 0,
+  "errors": [],
+  "require_result": false,
+  "required_files": [
+    "review-packet.md",
+    "diff.patch",
+    "changed-files.txt",
+    "evidence-ledger.md",
+    "waivers.md",
+    "dirty-worktree-summary.json"
+  ],
+  "status": "pass",
+  "strict_evidence": true,
+  "warnings": [],
+  "candidate_revision": "575710131f264468b280e5c424f00651da7146c0",
+  "diff_sha256": "9779d088ec6bec8a4ad5a05f463c6f13e90fee12e2a52075dd80ad6b4f72973c",
+  "review_packet_sha256": "43e6a2fda9c207de5b5483b15718e1ddd8e2362f92b39329055cc7b64a95d4bd"
+}

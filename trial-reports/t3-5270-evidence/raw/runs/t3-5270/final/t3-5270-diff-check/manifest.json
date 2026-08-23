@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-diff-check",
+  "created_at": "2026-08-23T07:45:48Z",
+  "started_at": "2026-08-23T07:45:48Z",
+  "completed_at": "2026-08-23T07:45:48Z",
+  "duration_ms": 4,
+  "tool_runtime_ms": 4,
+  "command": "git diff --check",
+  "command_argv": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "exit_code": 0,
+  "status": "pass",
+  "summary": "Required whitespace/error check on the complete candidate diff.",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "empty",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R6"
+  ],
+  "linked_scenario_ids": [
+    "S5"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}

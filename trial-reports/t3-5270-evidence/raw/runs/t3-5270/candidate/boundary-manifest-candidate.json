@@ -1,0 +1,21 @@
+{
+  "captured_at": "2026-08-23T09:20:26Z",
+  "entries": {
+    "attribute_call_chain": {
+      "output": "x = some_extremely_long_root_name.with_a_long_attribute.another_long_attribute.method_with_a_long_name(\n    argument\n).final_attribute\n",
+      "output_byte_count": 135,
+      "output_sha256": "cad0f75da4138e6b44658396ea3dc5265058ac297dd0de16dfc21f786a0c2c92",
+      "source": "x = some_extremely_long_root_name.with_a_long_attribute.another_long_attribute.method_with_a_long_name(argument).final_attribute\n",
+      "source_sha256": "880eb23c728ec264609d7e52ffc082761e4c5a4aebe415849edb5463ae897694"
+    },
+    "mixed_subscript_call_trailer": {
+      "output": "x = (\n    a[0][1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20][21][22][\n        23\n    ][24][25][26][27][28][29][30][31][32][33][34][35][36][37][38][39][40][41][42][43][\n        44\n    ][\n        45\n    ][\n        46\n    ][\n        47\n    ]\n    .method_with_a_long_name(argument)\n    .final_attribute\n)\n",
+      "output_byte_count": 326,
+      "output_sha256": "d16b6e0735c13453d0c87cba088912796ed5506d1625f0ec941d71cc3bf6380b",
+      "source": "x = a[0][1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20][21][22][23][24][25][26][27][28][29][30][31][32][33][34][35][36][37][38][39][40][41][42][43][44][45][46][47].method_with_a_long_name(argument).final_attribute\n",
+      "source_sha256": "81c15e7bdad6c659c02dc169c163e1cdb2d1993ad2837cca5ef8e96743307f37"
+    }
+  },
+  "phase": "candidate",
+  "schema_version": 1
+}

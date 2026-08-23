@@ -1,0 +1,36 @@
+..F                                                                      [100%]
+=================================== FAILURES ===================================
+__ test_long_flat_subscript_chain_matches_legacy_split[result: list[int] = ] ___
+
+assignment = 'result: list[int] = '
+
+    @pytest.mark.parametrize("assignment", ["result = ", "result: list[int] = "])
+    def test_long_flat_subscript_chain_matches_legacy_split(
+        assignment: str,
+    ) -> None:
+        source = assignment + "a" + "".join(f"[key{i % 7}]" for i in range(60)) + "\n"
+        actual = black.format_str(source, mode=black.Mode())
+    
+        with patch.object(
+            black.linegen,
+            "_batch_split_flat_subscript_chain",
+            side_effect=black.linegen.CannotSplit("force legacy RHS splitting"),
+        ):
+            legacy = black.format_str(source, mode=black.Mode())
+    
+>       assert actual == legacy
+E       AssertionError: assert 'result: list...    key3\n]\n' == 'result: list...    key3\n]\n'
+E         
+E         Skipping 168 identical leading characters in diff, use -v to show
+E         - y2][key3][key4][
+E         ?           ------
+E         + y2][key3][
+E         +     key4
+E         + ][...
+E         
+E         ...Full output truncated (68 lines hidden), use '-vv' to show
+
+tests/test_format.py:126: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_format.py::test_long_flat_subscript_chain_matches_legacy_split[result: list[int] = ]
+1 failed, 2 passed in 0.61s

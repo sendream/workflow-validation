@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "run_id": "t3-5270-ascii-guard-fuzz",
+  "created_at": "2026-08-23T09:10:30Z",
+  "started_at": "2026-08-23T09:09:43Z",
+  "completed_at": "2026-08-23T09:10:30Z",
+  "duration_ms": 43996,
+  "tool_runtime_ms": 43996,
+  "command": "/home/lsy/trials/black-run-1/venv/bin/python .agent-state/runs/t3-5270/scripts/ascii_guard_fuzz.py",
+  "command_argv": [
+    "/home/lsy/trials/black-run-1/venv/bin/python",
+    ".agent-state/runs/t3-5270/scripts/ascii_guard_fuzz.py"
+  ],
+  "exit_code": 0,
+  "status": "pass",
+  "summary": "Deterministic random accepted-shape differential for ASCII NAME/NUMBER guard",
+  "stdout_path": "outputs/stdout.txt",
+  "stderr_path": "outputs/stderr.txt",
+  "stdout_summary": "{\"batch_accepted_case_count\": 337, \"case_count\": 400, \"mismatch_count\": 0, \"mismatches\": [], \"pass\": true, \"schema_version\": 1, \"seed\": 5270}",
+  "stderr_summary": "empty",
+  "sha256": {
+    "stdout": "3291535629cf52e0a2109ea0ded9d80ba758981f3db66edfaa8e38a91889a361",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "linked_acceptance_ids": [
+    "R3",
+    "R5"
+  ],
+  "linked_scenario_ids": [
+    "S2",
+    "S4"
+  ],
+  "artifacts": [],
+  "blocked_reason": "not-needed",
+  "redaction_status": "unknown",
+  "token_usage": {
+    "status": "unavailable"
+  },
+  "estimated_cost": {
+    "status": "unavailable"
+  },
+  "external_lookup_ledger": []
+}
