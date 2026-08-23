@@ -118,6 +118,7 @@ def test_long_flat_subscript_chain_split_work_is_linear() -> None:
         ("result: list[int] = ", "names", True),
         ("result = ", "increasing-numbers", True),
         ("result = ", "nonmonotonic-numbers", False),
+        ("result = ", "increasing-wide-names", False),
         ("result = ", "increasing-wide-strings", False),
     ],
 )
@@ -132,6 +133,8 @@ def test_long_flat_subscript_chain_matches_legacy_split(
         bodies = [
             str(10**15 + index) if index % 3 == 0 else str(index) for index in range(60)
         ]
+    elif body_pattern == "increasing-wide-names":
+        bodies = ["名" * (index // 5 + 1) for index in range(30)]
     else:
         bodies = [repr("字" * (index // 5 + 1)) for index in range(30)]
     source = assignment + "a" + "".join(f"[{body}]" for body in bodies) + "\n"
