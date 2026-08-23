@@ -85,28 +85,60 @@ def test_empty() -> None:
 
 
 def test_long_flat_subscript_chain_split_work_is_linear() -> None:
-    small_source = "x = a" + "".join(f"[{i}]" for i in range(40)) + "\n"
-    large_source, expected = read_data("cases", "long_flat_subscript_chain")
+    small_source, expected = read_data("cases", "long_flat_subscript_chain")
+    large_source = "x = a" + "".join(f"[{i}]" for i in range(160)) + "\n"
 
     with patch.object(
         black.linegen,
         "_first_right_hand_split",
         wraps=black.linegen._first_right_hand_split,
     ) as small_split:
-        black.format_str(small_source, mode=black.Mode())
+        actual = black.format_str(small_source, mode=black.Mode())
 
     with patch.object(
         black.linegen,
         "_first_right_hand_split",
         wraps=black.linegen._first_right_hand_split,
     ) as large_split:
-        actual = black.format_str(large_source, mode=black.Mode())
+        black.format_str(large_source, mode=black.Mode())
 
     assert actual == expected
-    assert large_split.call_count <= small_split.call_count * 4, (
-        f"80 subscripts required {large_split.call_count} RHS split attempts; "
-        f"40 required {small_split.call_count}"
-    )
+    assert (
+        small_split.call_count <= 2 * 80
+    ), f"80 subscripts required {small_split.call_count} RHS split attempts"
+    assert (
+        large_split.call_count <= 2 * 160
+    ), f"160 subscripts required {large_split.call_count} RHS split attempts"
+
+
+@pytest.mark.parametrize(
+    ("assignment", "body_pattern"),
+    [
+        ("result = ", "names"),
+        ("result: list[int] = ", "names"),
+        ("result = ", "nonmonotonic-numbers"),
+    ],
+)
+def test_long_flat_subscript_chain_matches_legacy_split(
+    assignment: str, body_pattern: str
+) -> None:
+    if body_pattern == "names":
+        bodies = [f"key{index % 7}" for index in range(60)]
+    else:
+        bodies = [
+            str(10**15 + index) if index % 3 == 0 else str(index) for index in range(60)
+        ]
+    source = assignment + "a" + "".join(f"[{body}]" for body in bodies) + "\n"
+    actual = black.format_str(source, mode=black.Mode())
+
+    with patch.object(
+        black.linegen,
+        "_batch_split_flat_subscript_chain",
+        side_effect=black.linegen.CannotSplit("force legacy RHS splitting"),
+    ):
+        legacy = black.format_str(source, mode=black.Mode())
+
+    assert actual == legacy
 
 
 def test_patma_invalid() -> None:

@@ -1401,12 +1401,12 @@ def bracket_split_build_line(
 
 
 def _batch_split_flat_subscript_chain(line: Line, mode: Mode) -> Iterator[Line]:
-    """Batch the rightmost splits of a long, flat chain of simple subscripts.
+    """Batch the rightmost splits of a monotonic flat subscript chain.
 
     The regular RHS fallback peels one rightmost bracket at a time until the
-    remaining head is at most twice the line length.  Rebuilding every overlapping
-    head makes a long chain quadratic.  For the narrow shape accepted here, produce
-    the same head/body/tail partitions in one pass.  Anything else keeps using the
+    remaining head crosses twice the line length. Rebuilding every overlapping
+    head makes a long chain quadratic. For the narrow shape accepted here, produce
+    the same head/body/tail partitions in one pass. Anything else keeps using the
     regular RHS splitting path.
     """
     if line.comments or line.magic_trailing_comma:
@@ -1444,6 +1444,7 @@ def _batch_split_flat_subscript_chain(line: Line, mode: Mode) -> Iterator[Line]:
         raise CannotSplit("Subscript power base is not a name")
 
     trailers: list[tuple[Leaf, Leaf, Leaf]] = []
+    trailer_widths: list[int] = []
     for child in power.children[1:]:
         if (
             not isinstance(child, Node)
@@ -1467,9 +1468,17 @@ def _batch_split_flat_subscript_chain(line: Line, mode: Mode) -> Iterator[Line]:
         ):
             raise CannotSplit("Subscript trailer is not a flat single-leaf lookup")
         trailers.append((opening, body, closing))
+        trailer_widths.append(
+            str_width(opening.value) + str_width(body.value) + str_width(closing.value)
+        )
 
     if len(trailers) < 2:
         raise CannotSplit("Subscript chain is too short")
+    if any(
+        current < previous
+        for previous, current in zip(trailer_widths, trailer_widths[1:], strict=False)
+    ):
+        raise CannotSplit("Flat subscript trailer widths are not monotonic")
 
     power_leaves = [base]
     for opening, body, closing in trailers:
@@ -1515,7 +1524,9 @@ def _batch_split_flat_subscript_chain(line: Line, mode: Mode) -> Iterator[Line]:
             prefix_widths[opening_index] <= batch_limit
             and prefix_widths[closing_index] > batch_limit
         ):
-            batch_start = index
+            # The crossing trailer stays on the retained recursive head. The next
+            # trailer is the first one that the legacy fallback peels individually.
+            batch_start = index + 1
             break
     if batch_start is None or len(trailers) - batch_start < 2:
         raise CannotSplit("Flat subscript chain has no repeated RHS fallback to batch")
