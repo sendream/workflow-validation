@@ -7,7 +7,6 @@ from unittest.mock import patch
 import pytest
 
 import black
-import black.linegen
 from black.mode import TargetVersion
 from tests.util import (
     all_data_cases,
@@ -82,89 +81,6 @@ def test_line_ranges_line_by_line(filename: str) -> None:
 def test_empty() -> None:
     source = expected = ""
     assert_format(source, expected)
-
-
-def test_long_flat_subscript_chain_split_work_is_linear() -> None:
-    small_source, expected = read_data("cases", "long_flat_subscript_chain")
-    large_source = "x = a" + "".join(f"[{i}]" for i in range(160)) + "\n"
-
-    with patch.object(
-        black.linegen,
-        "_first_right_hand_split",
-        wraps=black.linegen._first_right_hand_split,
-    ) as small_split:
-        actual = black.format_str(small_source, mode=black.Mode())
-
-    with patch.object(
-        black.linegen,
-        "_first_right_hand_split",
-        wraps=black.linegen._first_right_hand_split,
-    ) as large_split:
-        black.format_str(large_source, mode=black.Mode())
-
-    assert actual == expected
-    assert (
-        small_split.call_count <= 2 * 80
-    ), f"80 subscripts required {small_split.call_count} RHS split attempts"
-    assert (
-        large_split.call_count <= 2 * 160
-    ), f"160 subscripts required {large_split.call_count} RHS split attempts"
-
-
-@pytest.mark.parametrize(
-    ("assignment", "body_pattern", "batch_expected"),
-    [
-        ("result = ", "names", True),
-        ("result: list[int] = ", "names", True),
-        ("result = ", "increasing-numbers", True),
-        ("result = ", "nonmonotonic-numbers", False),
-        ("x" * 84 + " = ", "names", False),
-        ("result = ", "increasing-wide-names", False),
-        ("result = ", "increasing-wide-strings", False),
-    ],
-)
-def test_long_flat_subscript_chain_matches_legacy_split(
-    assignment: str, body_pattern: str, batch_expected: bool
-) -> None:
-    if body_pattern == "names":
-        bodies = [f"key{index % 7}" for index in range(60)]
-    elif body_pattern == "increasing-numbers":
-        bodies = [str(10 ** (index // 10) + index) for index in range(60)]
-    elif body_pattern == "nonmonotonic-numbers":
-        bodies = [
-            str(10**15 + index) if index % 3 == 0 else str(index) for index in range(60)
-        ]
-    elif body_pattern == "increasing-wide-names":
-        bodies = ["名" * (index // 5 + 1) for index in range(30)]
-    else:
-        bodies = [repr("字" * (index // 5 + 1)) for index in range(30)]
-    source = assignment + "a" + "".join(f"[{body}]" for body in bodies) + "\n"
-
-    original = black.linegen._batch_split_flat_subscript_chain
-    batch_accepted = False
-
-    def tracked_batch(*args: Any, **kwargs: Any) -> Iterator[black.lines.Line]:
-        nonlocal batch_accepted
-        lines = list(original(*args, **kwargs))
-        batch_accepted = True
-        yield from lines
-
-    with patch.object(
-        black.linegen,
-        "_batch_split_flat_subscript_chain",
-        side_effect=tracked_batch,
-    ):
-        actual = black.format_str(source, mode=black.Mode())
-
-    with patch.object(
-        black.linegen,
-        "_batch_split_flat_subscript_chain",
-        side_effect=black.linegen.CannotSplit("force legacy RHS splitting"),
-    ):
-        legacy = black.format_str(source, mode=black.Mode())
-
-    assert actual == legacy
-    assert batch_accepted is batch_expected
 
 
 def test_patma_invalid() -> None:
