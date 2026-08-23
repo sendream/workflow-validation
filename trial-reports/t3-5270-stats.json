@@ -1,0 +1,72 @@
+{
+  "task": "t3-5270",
+  "issue": "psf/black#5270",
+  "route": "high",
+  "outcome": "partial-no-product-fix",
+  "task_base_revision": "868d4efdbcaf4c29387a99ba854be406b1a1ec99",
+  "workflow_revision": "fe560cd54eb5c93f9473c0c3dd64c26e5e3fe7a9",
+  "final_pre_report_revision": "1ac5227a7c7f326867162751e5d80cbe9666fe90",
+  "product_diff_lines": {
+    "added": 0,
+    "removed": 0
+  },
+  "baseline_median_seconds": {
+    "40": 0.014369468,
+    "80": 0.400607204,
+    "160": 2.370730568,
+    "300": 8.811188405
+  },
+  "strongest_rejected_candidate": {
+    "revision": "1ff34455be35812ab10cebd66e6730f68eab1196",
+    "median_seconds": {
+      "40": 0.016677293,
+      "80": 0.027540927,
+      "160": 0.039052603,
+      "300": 0.065071453
+    },
+    "speedup_at_160": 60.71,
+    "observed_160_to_300_exponent": 0.812,
+    "delivery_blocker": "formatting-byte-drift"
+  },
+  "final_falsification": {
+    "cases": 625,
+    "fast_path_accepted": 239,
+    "accepted_byte_mismatches": 133
+  },
+  "final_suite": {
+    "passed": 481,
+    "skipped": 3,
+    "seconds": 6.77,
+    "no_color_unset": true
+  },
+  "usage": {
+    "overall_wall_seconds_through_product_reversion": 9041,
+    "implementation_thread_wall_seconds": 3028.58,
+    "implementation_thread_input_tokens": 17363764,
+    "implementation_thread_cached_input_tokens": 16954112,
+    "implementation_thread_non_cached_input_tokens": 409652,
+    "implementation_thread_output_tokens": 112771,
+    "implementation_thread_reasoning_output_tokens": 42891,
+    "implementation_thread_completed_commands": 130,
+    "controller_tokens": null,
+    "reviewer_tokens": null
+  },
+  "mechanisms": {
+    "mechanical_subagents": 0,
+    "implementation_workers": 1,
+    "adjudicative_reviewer_slots": 1,
+    "sensitive_guard_warnings": 0,
+    "sensitive_guard_blocks": 0,
+    "trajectory_repeated_failure_warnings": 0,
+    "trajectory_edit_streak_warnings": 0,
+    "hook_busy_skip_events": 1,
+    "g20_linked_worktree_false_positives": 1,
+    "three_files_materially_consumed": true
+  },
+  "external_writes": {
+    "black_upstream_push": false,
+    "black_pull_request": false,
+    "black_issue_comment": false,
+    "review_repository_branch_only": true
+  }
+}
