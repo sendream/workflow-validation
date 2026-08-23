@@ -809,6 +809,12 @@ def transform_line(
             content), meaning the trailers get glued together to split on another
             bracket pair instead.
             """
+            try:
+                yield from _batch_split_flat_subscript_chain(line, mode)
+                return
+            except CannotSplit:
+                pass
+
             for omit in generate_trailers_to_omit(line, mode.line_length):
                 lines = list(right_hand_split(line, mode, features, omit=omit))
                 # Note: this check is only able to figure out if the first line of the
@@ -1392,6 +1398,169 @@ def bracket_split_build_line(
     ):
         result.should_split_rhs = True
     return result
+
+
+def _batch_split_flat_subscript_chain(line: Line, mode: Mode) -> Iterator[Line]:
+    """Batch the rightmost splits of a long, flat chain of simple subscripts.
+
+    The regular RHS fallback peels one rightmost bracket at a time until the
+    remaining head is at most twice the line length.  Rebuilding every overlapping
+    head makes a long chain quadratic.  For the narrow shape accepted here, produce
+    the same head/body/tail partitions in one pass.  Anything else keeps using the
+    regular RHS splitting path.
+    """
+    if line.comments or line.magic_trailing_comma:
+        raise CannotSplit("Flat subscript chain has comments or a trailing comma")
+
+    line_str = line_to_string(line)
+    if "\n" in line_str or str_width(line_str) <= mode.line_length * 2:
+        raise CannotSplit("Flat subscript chain does not need batched splitting")
+
+    leaves = line.leaves
+    if len(leaves) < 10:
+        raise CannotSplit("Not enough leaves for a flat subscript chain")
+
+    outer_closing = leaves[-1]
+    if outer_closing.type != token.RPAR or outer_closing.value:
+        raise CannotSplit("Flat subscript chain is not in optional parentheses")
+
+    last_subscript_closing = leaves[-2]
+    trailer = last_subscript_closing.parent
+    power = trailer.parent if trailer is not None else None
+    if (
+        last_subscript_closing.type != token.RSQB
+        or last_subscript_closing.value != "]"
+        or trailer is None
+        or trailer.type != syms.trailer
+        or power is None
+        or power.type != syms.power
+    ):
+        raise CannotSplit("Line does not end in a subscript power")
+
+    if not power.children or not isinstance(power.children[0], Leaf):
+        raise CannotSplit("Subscript power does not have a simple base")
+    base = power.children[0]
+    if base.type != token.NAME:
+        raise CannotSplit("Subscript power base is not a name")
+
+    trailers: list[tuple[Leaf, Leaf, Leaf]] = []
+    for child in power.children[1:]:
+        if (
+            not isinstance(child, Node)
+            or child.type != syms.trailer
+            or len(child.children) != 3
+        ):
+            raise CannotSplit("Power contains a non-simple subscript trailer")
+        opening, body, closing = child.children
+        if (
+            not isinstance(opening, Leaf)
+            or not isinstance(body, Leaf)
+            or not isinstance(closing, Leaf)
+            or opening.type != token.LSQB
+            or opening.value != "["
+            or closing.type != token.RSQB
+            or closing.value != "]"
+            or body.type not in {token.NAME, token.NUMBER, token.STRING}
+            or opening.prefix
+            or body.prefix
+            or closing.prefix
+        ):
+            raise CannotSplit("Subscript trailer is not a flat single-leaf lookup")
+        trailers.append((opening, body, closing))
+
+    if len(trailers) < 2:
+        raise CannotSplit("Subscript chain is too short")
+
+    power_leaves = [base]
+    for opening, body, closing in trailers:
+        power_leaves.extend((opening, body, closing))
+    try:
+        power_start = next(
+            index for index, leaf in enumerate(leaves) if leaf is power_leaves[0]
+        )
+    except StopIteration as exc:
+        raise CannotSplit("Subscript power is not on this line") from exc
+    power_end = power_start + len(power_leaves)
+    if (
+        leaves[power_start:power_end] != power_leaves
+        or power_start < 2
+        or power_end != len(leaves) - 1
+    ):
+        raise CannotSplit("Subscript power is not a contiguous final expression")
+
+    outer_opening = leaves[power_start - 1]
+    if (
+        leaves[power_start - 2].type != token.EQUAL
+        or outer_opening.type != token.LPAR
+        or outer_opening.value
+        or outer_closing.opening_bracket is not outer_opening
+    ):
+        raise CannotSplit("Subscript power is not a direct assignment RHS")
+
+    leaf_indices = {id(leaf): index for index, leaf in enumerate(leaves)}
+    prefix_width = 4 * line.depth
+    prefix_widths: list[int] = []
+    for leaf in leaves:
+        if "\n" in leaf.prefix or "\n" in leaf.value:
+            raise CannotSplit("Flat subscript chain contains a multiline leaf")
+        prefix_width += str_width(leaf.prefix) + str_width(leaf.value)
+        prefix_widths.append(prefix_width)
+
+    batch_start: int | None = None
+    batch_limit = mode.line_length * 2
+    for index, (opening, _body, closing) in enumerate(trailers):
+        opening_index = leaf_indices[id(opening)]
+        closing_index = leaf_indices[id(closing)]
+        if (
+            prefix_widths[opening_index] <= batch_limit
+            and prefix_widths[closing_index] > batch_limit
+        ):
+            batch_start = index
+            break
+    if batch_start is None or len(trailers) - batch_start < 2:
+        raise CannotSplit("Flat subscript chain has no repeated RHS fallback to batch")
+
+    selected = trailers[batch_start:]
+    first_opening = selected[0][0]
+    first_opening_index = leaf_indices[id(first_opening)]
+    result: list[Line] = []
+    head = bracket_split_build_line(
+        leaves[: first_opening_index + 1],
+        line,
+        first_opening,
+        component=_BracketSplitComponent.head,
+    )
+    if head:
+        result.append(head)
+
+    for index, (opening, _body, closing) in enumerate(selected):
+        ensure_visible(opening)
+        ensure_visible(closing)
+        opening_index = leaf_indices[id(opening)]
+        closing_index = leaf_indices[id(closing)]
+        body = bracket_split_build_line(
+            leaves[opening_index + 1 : closing_index],
+            line,
+            opening,
+            component=_BracketSplitComponent.body,
+        )
+        if body:
+            result.append(body)
+
+        tail_end = len(leaves)
+        if index + 1 < len(selected):
+            next_opening = selected[index + 1][0]
+            tail_end = leaf_indices[id(next_opening)] + 1
+        tail = bracket_split_build_line(
+            leaves[closing_index:tail_end],
+            line,
+            opening,
+            component=_BracketSplitComponent.tail,
+        )
+        if tail:
+            result.append(tail)
+
+    yield from result
 
 
 def dont_increase_indentation(split_func: Transformer) -> Transformer:

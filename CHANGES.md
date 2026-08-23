@@ -124,6 +124,9 @@
 
 <!-- Changes that improve Black's performance. -->
 
+- Improve performance when formatting long flat chains of consecutive subscripts by
+  batching equivalent right-hand splits instead of recursively rebuilding overlapping
+  lines (#5270)
 - Improve performance on strings containing many consecutive backslashes (#5163)
 - Improve performance when merging implicitly concatenated f-strings whose expressions
   contain long string literals (#5165)

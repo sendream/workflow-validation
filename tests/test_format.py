@@ -7,6 +7,7 @@ from unittest.mock import patch
 import pytest
 
 import black
+import black.linegen
 from black.mode import TargetVersion
 from tests.util import (
     all_data_cases,
@@ -81,6 +82,31 @@ def test_line_ranges_line_by_line(filename: str) -> None:
 def test_empty() -> None:
     source = expected = ""
     assert_format(source, expected)
+
+
+def test_long_flat_subscript_chain_split_work_is_linear() -> None:
+    small_source = "x = a" + "".join(f"[{i}]" for i in range(40)) + "\n"
+    large_source, expected = read_data("cases", "long_flat_subscript_chain")
+
+    with patch.object(
+        black.linegen,
+        "_first_right_hand_split",
+        wraps=black.linegen._first_right_hand_split,
+    ) as small_split:
+        black.format_str(small_source, mode=black.Mode())
+
+    with patch.object(
+        black.linegen,
+        "_first_right_hand_split",
+        wraps=black.linegen._first_right_hand_split,
+    ) as large_split:
+        actual = black.format_str(large_source, mode=black.Mode())
+
+    assert actual == expected
+    assert large_split.call_count <= small_split.call_count * 4, (
+        f"80 subscripts required {large_split.call_count} RHS split attempts; "
+        f"40 required {small_split.call_count}"
+    )
 
 
 def test_patma_invalid() -> None:
