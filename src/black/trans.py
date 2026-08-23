@@ -2375,6 +2375,9 @@ class StringParenWrapper(BaseStringSplitter, CustomSplitMapMixin):
         else:
             insert_str_child(new_rpar_leaf)
         last_line.append(new_rpar_leaf)
+        if old_rpar_leaf is not None:
+            for comment_leaf in line.comments_after(old_rpar_leaf):
+                last_line.append(comment_leaf, preformatted=True)
 
         # If the target string ended with a comma, we place this comma to the
         # right of the RPAR on the last line.

@@ -92,6 +92,9 @@
 - Don't hug brackets when doing so would join two `type: ignore` comments onto one line.
   The AST records `type: ignore` per line, so merging them dropped a `TypeIgnore` entry
   and Black failed its own equivalence check (#5271)
+- Preserve trailing `# type: ignore` comments when `string_processing` splits long
+  parenthesized dictionary values, preventing AST equivalence failures under
+  `--unstable`.
 
 ### Configuration
 

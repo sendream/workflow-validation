@@ -570,6 +570,13 @@ s = f'Lorem Ipsum is simply dummy text of the printing and typesetting industry:
     "which is against the line length rule."
 )  # type: ignore
 
+# Regression test for https://github.com/psf/black/issues/5328.
+my_dict = {
+    "key": (
+        "A very very very very very very very very very very very very very very very long string literal"
+    )  # type: ignore
+}
+
 
 # output
 
@@ -1268,3 +1275,11 @@ s = (
     "annotated with a type ignore pragma gets merged into a single very long line "
     "which is against the line length rule."
 )  # type: ignore
+
+# Regression test for https://github.com/psf/black/issues/5328.
+my_dict = {
+    "key": (
+        "A very very very very very very very very very very very very very very very"
+        " long string literal"
+    )  # type: ignore
+}
