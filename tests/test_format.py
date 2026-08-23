@@ -112,24 +112,45 @@ def test_long_flat_subscript_chain_split_work_is_linear() -> None:
 
 
 @pytest.mark.parametrize(
-    ("assignment", "body_pattern"),
+    ("assignment", "body_pattern", "batch_expected"),
     [
-        ("result = ", "names"),
-        ("result: list[int] = ", "names"),
-        ("result = ", "nonmonotonic-numbers"),
+        ("result = ", "names", True),
+        ("result: list[int] = ", "names", True),
+        ("result = ", "increasing-numbers", True),
+        ("result = ", "nonmonotonic-numbers", False),
+        ("result = ", "increasing-wide-strings", False),
     ],
 )
 def test_long_flat_subscript_chain_matches_legacy_split(
-    assignment: str, body_pattern: str
+    assignment: str, body_pattern: str, batch_expected: bool
 ) -> None:
     if body_pattern == "names":
         bodies = [f"key{index % 7}" for index in range(60)]
-    else:
+    elif body_pattern == "increasing-numbers":
+        bodies = [str(10 ** (index // 10) + index) for index in range(60)]
+    elif body_pattern == "nonmonotonic-numbers":
         bodies = [
             str(10**15 + index) if index % 3 == 0 else str(index) for index in range(60)
         ]
+    else:
+        bodies = [repr("字" * (index // 5 + 1)) for index in range(30)]
     source = assignment + "a" + "".join(f"[{body}]" for body in bodies) + "\n"
-    actual = black.format_str(source, mode=black.Mode())
+
+    original = black.linegen._batch_split_flat_subscript_chain
+    batch_accepted = False
+
+    def tracked_batch(*args: Any, **kwargs: Any) -> Iterator[black.lines.Line]:
+        nonlocal batch_accepted
+        lines = list(original(*args, **kwargs))
+        batch_accepted = True
+        yield from lines
+
+    with patch.object(
+        black.linegen,
+        "_batch_split_flat_subscript_chain",
+        side_effect=tracked_batch,
+    ):
+        actual = black.format_str(source, mode=black.Mode())
 
     with patch.object(
         black.linegen,
@@ -139,6 +160,7 @@ def test_long_flat_subscript_chain_matches_legacy_split(
         legacy = black.format_str(source, mode=black.Mode())
 
     assert actual == legacy
+    assert batch_accepted is batch_expected
 
 
 def test_patma_invalid() -> None:

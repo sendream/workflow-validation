@@ -1461,7 +1461,7 @@ def _batch_split_flat_subscript_chain(line: Line, mode: Mode) -> Iterator[Line]:
             or opening.value != "["
             or closing.type != token.RSQB
             or closing.value != "]"
-            or body.type not in {token.NAME, token.NUMBER, token.STRING}
+            or body.type not in {token.NAME, token.NUMBER}
             or opening.prefix
             or body.prefix
             or closing.prefix
