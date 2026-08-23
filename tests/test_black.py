@@ -257,9 +257,11 @@ class BlackTestCase(BlackBaseTestCase):
             "--color",
             f"--config={EMPTY_CONFIG}",
         ]
-        result = BlackRunner().invoke(
-            black.main, args, input=BytesIO(source.encode("utf-8"))
-        )
+        with patch.dict(os.environ):
+            os.environ.pop("NO_COLOR", None)
+            result = BlackRunner().invoke(
+                black.main, args, input=BytesIO(source.encode("utf-8"))
+            )
         actual = result.output
         # Again, the contents are checked in a different test, so only look for colors.
         self.assertIn("\033[1m", actual)
@@ -374,10 +376,12 @@ class BlackTestCase(BlackBaseTestCase):
         expected, _ = read_data("cases", "expression.diff")
         tmp_file = Path(black.dump_to_file(source))
         try:
-            result = BlackRunner().invoke(
-                black.main,
-                ["--diff", "--color", str(tmp_file), f"--config={EMPTY_CONFIG}"],
-            )
+            with patch.dict(os.environ):
+                os.environ.pop("NO_COLOR", None)
+                result = BlackRunner().invoke(
+                    black.main,
+                    ["--diff", "--color", str(tmp_file), f"--config={EMPTY_CONFIG}"],
+                )
         finally:
             os.unlink(tmp_file)
         actual = result.output
