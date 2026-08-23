@@ -1,0 +1,88 @@
+{
+  "task": "psf/black#5328",
+  "recorded_at": "2026-08-23T15:04:00+08:00",
+  "black_task_baseline": "8947c48ef2077c3a301b03c1e814dc2e3f78436e",
+  "workflow_source_revision": "fe560cd54eb5c93f9473c0c3dd64c26e5e3fe7a9",
+  "instrumented": {
+    "branch": "trial/t2-5328",
+    "parent": "868d4ef",
+    "code_commit": "e47994f766317f540cfa4cdc9ee03da4576afe38",
+    "route": "standard / visible, bounded fast path",
+    "turns": 2,
+    "wall_seconds": 882.8,
+    "input_tokens": 5759094,
+    "cached_input_tokens": 5577472,
+    "noncached_input_tokens": 181622,
+    "output_tokens": 27665,
+    "reasoning_output_tokens": 16652,
+    "command_executions": 48,
+    "delegations": 0,
+    "guard_or_monitor_warnings": 0,
+    "guard_or_monitor_blocks": 0,
+    "known_g20_linked_worktree_false_positives": 1,
+    "three_file_usage": "existence checked; task_plan.md, progress.md, and findings.md were absent and were not read or written",
+    "production_rework": 0,
+    "operational_failed_paths": [
+      "pre-commit executable absent from the shared venv",
+      "assumed uvx executable absent",
+      "unscoped pre-commit -a touched the frozen overlay and failed on unrelated overlay checks; all overlay changes were restored",
+      "first commit attempt lacked Git identity",
+      "G20 local-exclude validator reported the adjudicated linked-worktree false positive"
+    ],
+    "diff": {
+      "files": 3,
+      "insertions": 22,
+      "deletions": 1
+    },
+    "full_test": "481 passed, 3 skipped"
+  },
+  "control": {
+    "branch": "trial/control-t2-5328",
+    "parent": "8947c48ef2077c3a301b03c1e814dc2e3f78436e",
+    "commit": "5fb2b602c8f845744d19aa5ec47ca529a6b86b08",
+    "turns": 2,
+    "wall_seconds": 431.27,
+    "input_tokens": 2575486,
+    "cached_input_tokens": 2468608,
+    "noncached_input_tokens": 106878,
+    "output_tokens": 15109,
+    "reasoning_output_tokens": 7588,
+    "command_executions": 92,
+    "delegations": 0,
+    "guard_or_monitor_warnings": 0,
+    "guard_or_monitor_blocks": 0,
+    "three_file_usage": "not applicable; no overlay was installed",
+    "production_rework": 0,
+    "operational_failed_paths": [
+      "first commit attempt lacked Git identity"
+    ],
+    "diff": {
+      "files": 3,
+      "insertions": 22,
+      "deletions": 0
+    },
+    "full_test": "482 passed, 3 skipped"
+  },
+  "instrumented_minus_control": {
+    "wall_seconds": 451.53,
+    "wall_percent": 104.7,
+    "input_tokens": 3183608,
+    "input_percent": 123.61,
+    "cached_input_tokens": 3108864,
+    "cached_input_percent": 125.94,
+    "noncached_input_tokens": 74744,
+    "noncached_input_percent": 69.93,
+    "output_tokens": 12556,
+    "output_percent": 83.1
+  },
+  "upstream_comparison": {
+    "pull_request": "https://github.com/psf/black/pull/5329",
+    "status_at_comparison": "open",
+    "files": 3,
+    "insertions": 12,
+    "deletions": 0,
+    "instrumented_production_delta": "same three-line comment migration, placed immediately before trailing-comma reconstruction",
+    "control_production_delta": "byte-identical hunk and placement to upstream PR #5329",
+    "comparison_started_after_instrumented_patch_lock": true
+  }
+}

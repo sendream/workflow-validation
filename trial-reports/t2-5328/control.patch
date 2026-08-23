@@ -1,0 +1,38 @@
+diff --git a/CHANGES.md b/CHANGES.md
+index 196e4f9..a447ca0 100644
+--- a/CHANGES.md
++++ b/CHANGES.md
+@@ -70,0 +71,3 @@
++- Preserve inline comments on parentheses around long dictionary string values under
++  `--unstable`, preventing `# type: ignore` from disappearing and triggering Black's
++  AST safety check.
+diff --git a/src/black/trans.py b/src/black/trans.py
+index 523645d..1e5fd51 100644
+--- a/src/black/trans.py
++++ b/src/black/trans.py
+@@ -2385,0 +2386,4 @@ def do_transform(
++        if old_rpar_leaf is not None:
++            for comment_leaf in line.comments_after(old_rpar_leaf):
++                last_line.append(comment_leaf, preformatted=True)
++
+diff --git a/tests/data/cases/preview_long_string_type_ignore.py b/tests/data/cases/preview_long_string_type_ignore.py
+new file mode 100644
+index 0000000..57e166f
+--- /dev/null
++++ b/tests/data/cases/preview_long_string_type_ignore.py
+@@ -0,0 +1,15 @@
++# flags: --unstable
++my_dict = {
++    "key": (
++        "A very very very very very very very very very very very very very very very very long string literal"
++    )  # type: ignore
++}
++
++# output
++
++my_dict = {
++    "key": (
++        "A very very very very very very very very very very very very very very very"
++        " very long string literal"
++    )  # type: ignore
++}
