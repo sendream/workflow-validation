@@ -118,6 +118,7 @@ def test_long_flat_subscript_chain_split_work_is_linear() -> None:
         ("result: list[int] = ", "names", True),
         ("result = ", "increasing-numbers", True),
         ("result = ", "nonmonotonic-numbers", False),
+        ("x" * 84 + " = ", "names", False),
         ("result = ", "increasing-wide-names", False),
         ("result = ", "increasing-wide-strings", False),
     ],

@@ -1515,6 +1515,8 @@ def _batch_split_flat_subscript_chain(line: Line, mode: Mode) -> Iterator[Line]:
             raise CannotSplit("Flat subscript chain contains a multiline leaf")
         prefix_width += str_width(leaf.prefix) + str_width(leaf.value)
         prefix_widths.append(prefix_width)
+    if prefix_widths[power_start] == mode.line_length:
+        raise CannotSplit("Flat subscript base exactly fills the assignment line")
 
     batch_start: int | None = None
     batch_limit = mode.line_length * 2
